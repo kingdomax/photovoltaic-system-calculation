@@ -25,5 +25,21 @@ namespace PhotovoltaicSystemCalculation.Repositories
             await _context.SaveChangesAsync();
             return newUser;
         }
+
+        public async Task DeleteUser(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId); // Delete account based on primary key
+            if (user == null) { throw new ArgumentException("User does not exist"); }
+
+            try
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Database error occurred when deleting user", e);
+            }
+        }
     }
 }

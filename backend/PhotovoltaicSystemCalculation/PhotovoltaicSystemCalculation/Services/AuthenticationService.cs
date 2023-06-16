@@ -1,6 +1,6 @@
 ﻿using PhotovoltaicSystemCalculation.Models;
-using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
+using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.Services
 {
@@ -23,6 +23,13 @@ namespace PhotovoltaicSystemCalculation.Services
 
             var createdUser = await _userAccountRepository.CreateNewUser(email, password);
             return GenerateUserToken(createdUser);
+        }
+
+        public async Task DeleteUser(string userId)
+        {
+            try { await _userAccountRepository.DeleteUser(Convert.ToInt32(userId)); }
+            catch (ArgumentException e) { throw new Exception("User does not exist", e); }
+            catch (Exception e) { throw new Exception("An error occurred when deleting user", e); }
         }
 
         // This is simplified version for the sake of prototype app.

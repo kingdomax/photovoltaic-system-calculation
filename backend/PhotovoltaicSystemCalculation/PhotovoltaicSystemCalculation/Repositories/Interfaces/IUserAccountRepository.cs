@@ -6,5 +6,6 @@ namespace PhotovoltaicSystemCalculation.Repositories.Interfaces
     {
         public Task<UserDto> GetUserByEmailAndPassword(string email, string password);
         public Task<UserDto> CreateNewUser(string email, string password);
+        public Task DeleteUser(int userId);
     }
 }

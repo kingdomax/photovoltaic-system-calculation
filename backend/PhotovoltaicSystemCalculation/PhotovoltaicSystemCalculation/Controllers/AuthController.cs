@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotovoltaicSystemCalculation.Models;
-using PhotovoltaicSystemCalculation.Services;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.Controllers
@@ -20,7 +19,7 @@ namespace PhotovoltaicSystemCalculation.Controllers
         public async Task<IActionResult> Login(UserLogin login)
         {
             var userToken = await _authenticationService.ValidateUser(login.Email, login.Password); // Validate the user's credentials. If the user was found, generate a token.
-            return !string.IsNullOrEmpty(userToken) ? Ok(new { token = userToken }) : Unauthorized(); // Return the token or Unauthorized status
+            return !string.IsNullOrEmpty(userToken) ? Ok(new { token = userToken }) : Unauthorized("Unauthorized"); // Return the token or Unauthorized status
         }
 
         [HttpPost("Signup")]
@@ -28,6 +27,24 @@ namespace PhotovoltaicSystemCalculation.Controllers
         {
             var userToken = await _authenticationService.RegisterNewUser(login.Email, login.Password);
             return !string.IsNullOrEmpty(userToken) ? Ok(new { token = userToken }) : BadRequest("User already exists");
+        }
+
+        [HttpPost("DeleteAccount")]
+        public async Task<IActionResult> DeleteAccount([FromHeader] string Authorization)
+        {
+            if (string.IsNullOrEmpty(Authorization)) { return Unauthorized("Unauthorized"); }
+
+            var userId = Authorization.Split('.')[0];
+            try
+            {
+                await _authenticationService.DeleteUser(userId);
+                return Ok(new { });
+            }
+            catch (Exception e)
+            {
+                // Return the exception message as part of the response
+                return BadRequest(e.Message);
+            }
         }
     }
 }
