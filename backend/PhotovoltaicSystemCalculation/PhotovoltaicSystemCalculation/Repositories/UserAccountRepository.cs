@@ -17,5 +17,13 @@ namespace PhotovoltaicSystemCalculation.Repositories
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == password);
             return user;
         }
+
+        public async Task<UserDto> CreateNewUser(string email, string password)
+        {
+            var newUser = new UserDto { Email = email, Password = password };
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            return newUser;
+        }
     }
 }

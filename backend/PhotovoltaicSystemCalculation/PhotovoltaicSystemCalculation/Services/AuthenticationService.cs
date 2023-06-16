@@ -1,26 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using PhotovoltaicSystemCalculation.Models;
+﻿using PhotovoltaicSystemCalculation.Models;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
-using System.Xml.Linq;
 
 namespace PhotovoltaicSystemCalculation.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserAccountRepository _userAccountRepository;
+        public AuthenticationService(IUserAccountRepository userAccountRepository) =>  _userAccountRepository = userAccountRepository;
 
-        public AuthenticationService(IUserAccountRepository userAccountRepository) 
+        public async Task<string> ValidateUser(string email, string password)
         {
-            _userAccountRepository = userAccountRepository;
+            var user = await _userAccountRepository.GetUserByEmailAndPassword(email, password);
+            return GenerateUserToken(user); 
         }
 
-        public async Task<string> ValidateAndGenerateUserToken(UserLogin userLogin)
+        public async Task<string> RegisterNewUser(string email, string password)
         {
-            // This is simplified version for the sake of prototype app.
-            // In real-world application, we would need JWT token for securely transmitting information between client-server. 
-            var user = await _userAccountRepository.GetUserByEmailAndPassword(userLogin.Email, userLogin.Password);
-            return user != null ? $"{user.Id}.{user.Email}" : ""; 
+            // check if user already exists
+            var existingUser = await _userAccountRepository.GetUserByEmailAndPassword(email, password);
+            if (existingUser != null) { return null; }
+
+            var createdUser = await _userAccountRepository.CreateNewUser(email, password);
+            return GenerateUserToken(createdUser);
+        }
+
+        // This is simplified version for the sake of prototype app.
+        // In real-world application, we would need JWT token for securely transmitting information between client-server. 
+        private string GenerateUserToken(UserDto user)
+        {
+            return user != null ? $"{user.Id}.{user.Email}" : "";
         }
     }
 }

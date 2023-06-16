@@ -4,6 +4,7 @@ namespace PhotovoltaicSystemCalculation.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        public Task<string> ValidateAndGenerateUserToken(UserLogin userLoginDto);
+        public Task<string> ValidateUser(string email, string password);
+        public Task<string> RegisterNewUser(string email, string password);
     }
 }

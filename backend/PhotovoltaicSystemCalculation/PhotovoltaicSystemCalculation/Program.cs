@@ -20,7 +20,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin", builder => {
         // Replace with the client-side address
         builder.WithOrigins("http://localhost:8080").AllowAnyHeader().AllowAnyMethod();
-        builder.WithOrigins("http://localhost:7070").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -37,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); don't want to deal with CORS stuff
 
 app.UseAuthorization();
 
