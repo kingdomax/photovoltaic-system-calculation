@@ -11,20 +11,20 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             var mockData = new SolarDTO
             {
                 Year = 2023,
-                Irradiance = new Dictionary<int, double>()
+                Irradiance = new Dictionary<int, float>()
                 {
-                    { 1, 1d },
-                    { 2, 5d },
-                    { 3, 10d },
-                    { 4, 15d },
-                    { 5, 20d },
-                    { 6, 1d },
-                    { 7, 1d },
-                    { 8, 1d },
-                    { 9, 1d },
-                    { 10, 1d },
-                    { 11, 1d },
-                    { 12, 1d },
+                    { 1, 1f },
+                    { 2, 5f },
+                    { 3, 10f },
+                    { 4, 15f },
+                    { 5, 20f },
+                    { 6, 1f },
+                    { 7, 1f },
+                    { 8, 1f },
+                    { 9, 1f },
+                    { 10, 1f },
+                    { 11, 1f },
+                    { 12, 1f },
                 }
             };
 

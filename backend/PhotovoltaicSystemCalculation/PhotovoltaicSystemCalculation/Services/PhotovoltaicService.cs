@@ -18,7 +18,7 @@ namespace PhotovoltaicSystemCalculation.Services
             _weatherRepository = weatherRepository;
         }
 
-        public async Task<double> CaculateElectricProduction(ElectricProductionArgs args)
+        public async Task<float> CaculateElectricProduction(ElectricProductionArgs args)
         {
             var sunInfo = await _solarAPI.FetchSolarInformation(args.Year); // call solar API to get sun information for the entire year
             var weatherInfo = await _weatherRepository.GetWeatherForecast(args.Month, args.Year); // call db to get weather for specific month
@@ -26,10 +26,10 @@ namespace PhotovoltaicSystemCalculation.Services
             return CaculateElectricProductionPerDay(args, sunInfo, weatherInfo);
         }
 
-        private double CaculateElectricProductionPerDay(ElectricProductionArgs args, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
+        private float CaculateElectricProductionPerDay(ElectricProductionArgs args, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
         {
             // TODO: Implement electric production calculation
-            return 9999.1234d;
+            return 9999.1234f;
         }
     }
 }

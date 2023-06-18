@@ -10,9 +10,9 @@ namespace PhotovoltaicSystemCalculation.Repositories
             // TODO: This method will be receive list of weather data from database 
             var mockData = new List<WeatherDTO>()
             {
-                new WeatherDTO { Date = DateTime.Now.AddDays(-1), CloudCover = 0d, Temperature = 270d },
-                new WeatherDTO { Date = DateTime.Now, CloudCover = 0.5d, Temperature = 260d },
-                new WeatherDTO { Date = DateTime.Now.AddDays(1), CloudCover = 1d, Temperature = 250d },
+                new WeatherDTO { Date = DateTime.Now.AddDays(-1), CloudCover = 0f, Temperature = 270f },
+                new WeatherDTO { Date = DateTime.Now, CloudCover = 0f, Temperature = 270f },
+                new WeatherDTO { Date = DateTime.Now.AddDays(1), CloudCover = 0f, Temperature = 270f },
             };
 
             return mockData;
