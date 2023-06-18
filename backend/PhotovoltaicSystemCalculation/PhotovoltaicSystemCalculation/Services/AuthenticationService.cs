@@ -1,4 +1,4 @@
-﻿using PhotovoltaicSystemCalculation.Models;
+﻿using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 
@@ -34,7 +34,7 @@ namespace PhotovoltaicSystemCalculation.Services
 
         // This is simplified version for the sake of prototype app.
         // In real-world application, we would need JWT token for securely transmitting information between client-server. 
-        private string GenerateUserToken(UserDto user)
+        private string GenerateUserToken(UserDTO user)
         {
             return user != null ? $"{user.Id}.{user.Email}" : "";
         }

@@ -1,6 +1,6 @@
-﻿namespace PhotovoltaicSystemCalculation.Models
+﻿namespace PhotovoltaicSystemCalculation.Repositories.Models
 {
-    public class UserDto
+    public class UserDTO
     {
         public int Id { get; set; }
         public string Email { get; set; }

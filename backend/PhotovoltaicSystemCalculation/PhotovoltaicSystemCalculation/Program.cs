@@ -1,8 +1,9 @@
 using PhotovoltaicSystemCalculation.Services;
-using PhotovoltaicSystemCalculation.Services.Interfaces;
+using PhotovoltaicSystemCalculation.ExternalAPI;
 using PhotovoltaicSystemCalculation.Repositories;
+using PhotovoltaicSystemCalculation.Services.Interfaces;
+using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +12,11 @@ builder.Services.AddControllers();
 
 // Register your services here
 builder.Services.AddDbContext<SQLLiteContext>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ISolarAPI, SolarAPI>();
+builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 // Configure CORS here
 builder.Services.AddCors(options =>

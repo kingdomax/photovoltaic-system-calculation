@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhotovoltaicSystemCalculation.Models;
+using PhotovoltaicSystemCalculation.Repositories.Models;
 
 namespace PhotovoltaicSystemCalculation.Repositories
 {
     public class SQLLiteContext : DbContext
     {
-        public DbSet<UserDto> Users { get; set; }
+        public DbSet<UserDTO> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

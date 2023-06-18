@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhotovoltaicSystemCalculation.Models;
+using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.Repositories
@@ -9,7 +9,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
         private readonly SQLLiteContext _context;
         public UserAccountRepository(SQLLiteContext context) => _context = context;
 
-        public async Task<UserDto> GetUserByEmailAndPassword(string email, string password)
+        public async Task<UserDTO> GetUserByEmailAndPassword(string email, string password)
         {
             // Never store passwords in plain text !!
             // This is simplified version for the sake of prototype app.
@@ -18,9 +18,9 @@ namespace PhotovoltaicSystemCalculation.Repositories
             return user;
         }
 
-        public async Task<UserDto> CreateNewUser(string email, string password)
+        public async Task<UserDTO> CreateNewUser(string email, string password)
         {
-            var newUser = new UserDto { Email = email, Password = password };
+            var newUser = new UserDTO { Email = email, Password = password };
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
             return newUser;
