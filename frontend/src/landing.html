@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Photovoltaic System Calculation</title>
+    <script type="module" src="./js/landingPage.js"></script>
+  </head>
+  <body class="bg-body-tertiary">
+    <main class="d-flex flex-nowrap">
+      <!-- Nav bar -->
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+        <!-- Navbar header -->
+        <a href="javascript:void(0)" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <span class="fs-4">Photovoltaic System Calculation</span>
+        </a>
+        <hr>
+        <!-- Navbar body -->
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li>
+            <a id="profile" href="javascript:void(0)" class="nav-link active" aria-current="page">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#customer"/></svg>
+              Profile
+            </a>
+          </li> 
+          <li>
+            <a id="projectList" href="javascript:void(0)" class="nav-link text-white">
+              <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#projects"/></svg>
+              My Projects
+            </a>
+          </li>
+          <li>
+            <a id="project" href="javascript:void(0)" class="nav-link text-white">
+              <svg class="bi pe-none me-2 ms-4" width="16" height="16"><use xlink:href="#arrowRight"/></svg>
+              Project Name...
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <!-- Navbar footer -->
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong id="navUserEmail">mdo</strong>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item link-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a id="signoutBtn" class="dropdown-item" href="javascript:void(0)">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content w-100 scrollarea px-5 py-3">
+        <!-- Profile Page -->
+        <div class="profile-page mx-auto">
+          <hr class="my-4">
+          <h4 class="mb-3">Personal Information</h4>
+          <form id="editForm">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="firstName" class="form-label">First name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="" value="">
+              </div>
+              <div class="col-sm-6">
+                <label for="lastName" class="form-label">Last name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="">
+              </div>
+              <div class="col-12">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="1234 Main St">
+              </div>
+              <div class="col-md-5">
+                <label for="country" class="form-label">Country</label>
+                <select class="form-select" id="country">
+                  <option value="">Choose...</option>
+                  <option value="Germany">Germany</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="state" class="form-label">State</label>
+                <select class="form-select" id="state">
+                  <option value="">Choose...</option>
+                  <option value="Saxony">Saxony</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="zip" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="zip" placeholder="">
+              </div>
+            </div>
+
+            <hr class="my-4">
+            <h4 class="mb-3">Security</h4>
+            <div class="row gy-3">
+              <div class="col-md-6">
+                <label for="cc-name" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="newPassword" placeholder="">
+              </div>
+              <div class="col-md-6">
+                <label for="cc-number" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" placeholder="">
+              </div>
+            </div>
+
+            <hr class="my-4">
+            <button class="w-100 btn btn-primary btn-lg mt-3" type="submit">Save Changes</button>
+          </form>
+        </div>
+
+        <!-- Project List-->
+        <div class="project-list-page">
+        </div>
+
+        <!-- Project -->
+        <div class="project-page">
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteAccountModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-body p-4 text-center">
+            <h5 class="text-danger mb-3">Are you sure?</h5>
+            <p class="mb-0">By deleting the account, you will no longer have access to all of your project.</p>
+          </div>
+          <div class="modal-footer flex-nowrap p-0">
+            <button id="confirmDeleteAccount" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Delete</strong></button>
+            <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="customer" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+      </symbol>
+      <symbol id="projects" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>
+      </symbol>
+      <symbol id="arrowRight" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
+      </symbol>
+    </svg>
+  </body>
+</html>

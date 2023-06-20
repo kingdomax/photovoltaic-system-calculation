@@ -19,14 +19,14 @@ function initSigninForm() {
         // Save the token and redirect the user
         const onSuccess = (data) => {
             sessionStorage.setItem('usertoken', data.token);
-            window.location.href = '/dashboard.html';
+            window.location.href = '/landing.html';
         };
     
         const onError = (error) => {
             alert(`Login failed: ${error.message}`);
         };
     
-        fetchData(url, { email, password }, onSuccess, onError);
+        fetchData(url, { Email: email, Password: password }, onSuccess, onError);
     });
 }
 

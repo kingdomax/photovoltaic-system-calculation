@@ -1,5 +1,6 @@
-import { getUserEmail } from "./helpers/userHelpers";
 import { fetchData } from "./fetchModule";
+import { pageChange } from "./landingPage";
+import { getUserEmail } from "./helpers/userHelpers";
 
 export function init(){
     initBodyPart();
@@ -20,6 +21,9 @@ function initBodyPart() {
             // Add 'active' and remove 'text-white' classes for the clicked <a> tag
             navLink.classList.add('active');
             navLink.classList.remove('text-white');
+
+            // re-render main section of landing page
+            pageChange(e.currentTarget.id);
         });
     });
 }
