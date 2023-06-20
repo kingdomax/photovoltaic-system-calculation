@@ -1,4 +1,4 @@
-export function getUserEmail() {
+export function getUsername() {
     const userToken = sessionStorage.getItem('usertoken');
     return userToken.substring(userToken.indexOf('.') + 1);
 }

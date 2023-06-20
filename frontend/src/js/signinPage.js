@@ -12,7 +12,7 @@ function initSigninForm() {
         event.preventDefault();
         
         // Get the form fields
-        const email = document.getElementById('floatingInput').value;
+        const username = document.getElementById('floatingInput').value;
         const password = document.getElementById('floatingPassword').value;
         const url = isSignup ? 'http://localhost:7070/Auth/Signup' : 'http://localhost:7070/Auth/Login';
     
@@ -26,7 +26,7 @@ function initSigninForm() {
             alert(`Login failed: ${error.message}`);
         };
     
-        fetchData(url, { Email: email, Password: password }, onSuccess, onError);
+        fetchData(url, { Username: username, Password: password }, onSuccess, onError);
     });
 }
 

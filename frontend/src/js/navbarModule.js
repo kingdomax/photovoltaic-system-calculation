@@ -1,6 +1,6 @@
 import { fetchData } from "./fetchModule";
 import { pageChange } from "./landingPage";
-import { getUserEmail } from "./helpers/userHelpers";
+import { getUsername } from "./helpers/userHelpers";
 
 export function init(){
     initBodyPart();
@@ -35,7 +35,7 @@ function initFooterPart() {
     };
     
     // profile picture
-    document.getElementById('navUserEmail').innerText = getUserEmail();
+    document.getElementById('navUserEmail').innerText = getUsername();
 
     // delete account button
     document.getElementById('confirmDeleteAccount').addEventListener('click', (event) => {

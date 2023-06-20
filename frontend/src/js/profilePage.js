@@ -14,7 +14,8 @@ function renderUserInfo() {
             address: "",
             country: "",
             state: "",
-            zip: ""
+            zip: "",
+            email: "",
         },
         newPassword: ""
     };
@@ -26,6 +27,7 @@ function renderUserInfo() {
         document.getElementById('country').value = response.userInfo.country || "";
         document.getElementById('state').value = response.userInfo.state || "";
         document.getElementById('zip').value = response.userInfo.zip || "";
+        document.getElementById('email').value = response.userInfo.email || "";
     };
 
     editUserInfo(emptyInfo, fillFormWithUserInfo);
@@ -40,7 +42,8 @@ function bindingFormEvent() {
                 address: document.getElementById('address').value,
                 country: document.getElementById('country').value,
                 state: document.getElementById('state').value,
-                zip: document.getElementById('zip').value
+                zip: document.getElementById('zip').value,
+                email: document.getElementById('email').value
             },
             newPassword: document.getElementById('newPassword').value
         };

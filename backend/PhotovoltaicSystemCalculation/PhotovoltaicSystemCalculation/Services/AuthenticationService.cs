@@ -10,19 +10,19 @@ namespace PhotovoltaicSystemCalculation.Services
         private readonly IUserAccountRepository _userAccountRepository;
         public AuthenticationService(IUserAccountRepository userAccountRepository) =>  _userAccountRepository = userAccountRepository;
 
-        public async Task<string> ValidateUser(string email, string password)
+        public async Task<string> ValidateUser(string username, string password)
         {
-            var user = await _userAccountRepository.GetUserByEmailAndPassword(email, password);
+            var user = await _userAccountRepository.GetUser(username, password);
             return GenerateUserToken(user); 
         }
 
-        public async Task<string> RegisterNewUser(string email, string password)
+        public async Task<string> RegisterNewUser(string username, string password)
         {
             // check if user already exists
-            var existingUser = await _userAccountRepository.GetUserByEmailAndPassword(email, password);
+            var existingUser = await _userAccountRepository.GetUser(username, password);
             if (existingUser != null) { return null; }
 
-            var createdUser = await _userAccountRepository.CreateNewUser(email, password);
+            var createdUser = await _userAccountRepository.CreateNewUser(username, password);
             return GenerateUserToken(createdUser);
         }
 
@@ -50,6 +50,7 @@ namespace PhotovoltaicSystemCalculation.Services
                     Country = updatedUser.Country,
                     State = updatedUser.State,
                     Zip = updatedUser.Zip,
+                    Email = updatedUser.Email,
                 };
             }
             catch (ArgumentException e) { throw new Exception("User does not exist", e); }
@@ -60,7 +61,7 @@ namespace PhotovoltaicSystemCalculation.Services
         // In real-world application, we would need JWT token for securely transmitting information between client-server. 
         private string GenerateUserToken(UserDTO user)
         {
-            return user != null ? $"{user.Id}.{user.Email}" : "";
+            return user != null ? $"{user.Id}.{user.Username}" : "";
         }
     }
 }

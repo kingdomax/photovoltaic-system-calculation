@@ -10,18 +10,18 @@ namespace PhotovoltaicSystemCalculation.Repositories
         private readonly SQLLiteContext _context;
         public UserAccountRepository(SQLLiteContext context) => _context = context;
 
-        public async Task<UserDTO> GetUserByEmailAndPassword(string email, string password)
+        public async Task<UserDTO> GetUser(string username, string password)
         {
             // Never store passwords in plain text !!
             // This is simplified version for the sake of prototype app.
             // Always hash and salt them before storage, and compare the hashed (and salted) values when checking login credentials.
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == password);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
             return user;
         }
 
-        public async Task<UserDTO> CreateNewUser(string email, string password)
+        public async Task<UserDTO> CreateNewUser(string username, string password)
         {
-            var newUser = new UserDTO { Email = email, Password = password };
+            var newUser = new UserDTO { Username = username, Password = password };
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
             return newUser;
@@ -55,6 +55,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
             if (!string.IsNullOrEmpty(newInfo.Country)) { user.Country = newInfo.Country; }
             if (!string.IsNullOrEmpty(newInfo.State)) { user.State = newInfo.State; }
             if (!string.IsNullOrEmpty(newInfo.Zip)) { user.Zip = newInfo.Zip; }
+            if (!string.IsNullOrEmpty(newInfo.Email)) { user.Email = newInfo.Email; }
             if (!string.IsNullOrEmpty(newPassword)) { user.Password = newPassword; } // Typically we need to hash this
 
             try

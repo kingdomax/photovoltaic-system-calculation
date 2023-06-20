@@ -18,14 +18,14 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLoginRequest login)
         {
-            var userToken = await _authenticationService.ValidateUser(login.Email, login.Password);
+            var userToken = await _authenticationService.ValidateUser(login.Username, login.Password);
             return !string.IsNullOrEmpty(userToken) ? Ok(new { token = userToken }) : Unauthorized("Unauthorized");
         }
 
         [HttpPost("Signup")]
         public async Task<IActionResult> Signup(UserLoginRequest login)
         {
-            var userToken = await _authenticationService.RegisterNewUser(login.Email, login.Password);
+            var userToken = await _authenticationService.RegisterNewUser(login.Username, login.Password);
             return !string.IsNullOrEmpty(userToken) ? Ok(new { token = userToken }) : BadRequest("User already exists");
         }
 
