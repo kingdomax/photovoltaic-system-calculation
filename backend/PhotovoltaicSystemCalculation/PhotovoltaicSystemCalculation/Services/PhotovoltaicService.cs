@@ -52,8 +52,8 @@ namespace PhotovoltaicSystemCalculation.Services
                 int month = weather.DateTime.Month;
                 float sunIrridance = sunInfo.Irradiance[month];
 
-                //Calculate adjustedIrradiance [Adjusted Irradiance (kW/m²) = Solar Irradiance * Efficiency * (1 - Cloud Cover)]
-                float adjustedIrradiance = sunIrridance * args.Efficiency * (1f - weather.CloudCover);
+                //Calculate adjustedIrradiance [Adjusted Irradiance (kW/m²) = Solar Irradiance * Efficiency * (1 - Cloud Cover) * Area of solar cell]
+                float adjustedIrradiance = sunIrridance * args.Efficiency * (1f - weather.CloudCover) * args.Area;
 
                 //Calculate adjustedPeakPower [Adjusted Peak Power (kW) = Peak Power (kW) * (1 - Temp Coeff * (Temp - 25))]
                 float adjustedPeakPower = args.PeakPower * (1f - 0.005f * (weather.Temperature - 25f));
