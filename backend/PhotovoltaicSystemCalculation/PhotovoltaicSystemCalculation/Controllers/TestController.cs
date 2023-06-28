@@ -6,20 +6,20 @@ namespace PhotovoltaicSystemCalculation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PhotovoltaicController : ControllerBase
+    public class TestController : ControllerBase
     {
         private readonly IPhotovoltaicService _photovoltaicService;
 
-        public PhotovoltaicController(IPhotovoltaicService photovoltaicService)
+        public TestController(IPhotovoltaicService photovoltaicService)
         {
             _photovoltaicService = photovoltaicService;
         }
 
-        [HttpPost("Test")]
-        public async Task<IActionResult> Test(ElectricProductionArgs args)
+        [HttpPost("CaculateElectricProduction")]
+        public async Task<IActionResult> CaculateElectricProduction(ElectricProductionArgs args)
         {
             var testResult = await _photovoltaicService.CaculateElectricProduction(args);
-            return Ok(testResult);
+            return Ok(testResult); // todo: need to return correct status instead of omit error
         }
     }
 }

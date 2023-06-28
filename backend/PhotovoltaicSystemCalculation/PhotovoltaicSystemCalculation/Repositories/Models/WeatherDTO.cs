@@ -4,6 +4,6 @@
     {
         public DateTime DateTime { get; set; }
         public float Temperature { get; set; }
-        public int CloudCover { get; set; }
+        public float CloudCover { get; set; }
     }
 }

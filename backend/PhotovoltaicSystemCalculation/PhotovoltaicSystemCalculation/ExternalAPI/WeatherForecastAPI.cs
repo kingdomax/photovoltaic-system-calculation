@@ -1,22 +1,48 @@
 ﻿using PhotovoltaicSystemCalculation.Repositories.Models;
-using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 using Newtonsoft.Json.Linq;
+using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 
-namespace PhotovoltaicSystemCalculation.Repositories
+namespace PhotovoltaicSystemCalculation.ExternalAPI
 {
-    public class WeatherRepository : IWeatherRepository
+    public class WeatherForecastAPI : IWeatherForecastAPI
     {
-        public async Task<IList<WeatherDTO>> GetWeatherForecast(float latitude, float longitude, string startDate, string endDate)
+        public async Task<IList<WeatherDTO>> GetWeatherForecast(float latitude, float longitude, long startDate)
         {
             // TODO: This method will be receive list of weather data from API 
             var returnData = new List<WeatherDTO>();
 
+            // Get data past 30 days
+            for (var i = 0; i < 30; i++)
+            {
+                // Convert the UNIX timestamp to a DateTimeOffset.
+                DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(startDate);
+
+                // Subtract 30 days from the date.
+                DateTimeOffset theDaysEarlier = dateTimeOffset.AddDays(-i);
+
+                // Convert the new DateTimeOffset back to a UNIX timestamp.
+                long date = theDaysEarlier.ToUnixTimeSeconds();
+
+                var avgWeatherDTO = await GetAverageWeatherForecastPerDay(latitude, longitude, date);
+
+                // Add the WeatherDTO object to the result list
+                returnData.Add(avgWeatherDTO);
+            }
+
+            return returnData;
+
+        }
+
+        public async Task<WeatherDTO> GetAverageWeatherForecastPerDay(float latitude, float longitude, long date)
+        {
             // Call OpenWeather API to get Clound and Tempurature data
+            var resultData = new List<WeatherDTO>();
+
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync("https://history.openweathermap.org/data/2.5/history/city?lat=" + latitude + "&lon=" + longitude + "&type=hour&start=" + startDate + "&cnt=" + endDate + "&appid=cf5ead8af14c2db62245cc31d7fcf794");
+                    HttpResponseMessage response = await client.GetAsync("https://history.openweathermap.org/data/2.5/history/city?lat=" + latitude + "&lon=" + longitude + "&type=hour&start=" + date + "&cnt=24&appid=cf5ead8af14c2db62245cc31d7fcf794");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -29,7 +55,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
                         {
                             // Extract "dt" value (timestamp) and convert to DateTime
                             long unixTimestamp = weatherData.Value<long>("dt");
-                            DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime;
+                            DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime.Date;
 
                             // Extract "temp" value
                             JObject temperatureObject = (JObject)weatherData["main"];
@@ -40,7 +66,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
 
                             // Extract "clouds" value
                             JObject cloudsObject = (JObject)weatherData["clouds"];
-                            int cloudsValue = cloudsObject.Value<int>("all");
+                            float cloudsValue = cloudsObject.Value<int>("all") / 100f;
 
                             // Create a WeatherDTO object
                             WeatherDTO weatherDTO = new WeatherDTO()
@@ -51,7 +77,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
                             };
 
                             // Add the WeatherDTO object to the result list
-                            returnData.Add(weatherDTO);
+                            resultData.Add(weatherDTO);
                         }
                     }
                     else
@@ -65,19 +91,20 @@ namespace PhotovoltaicSystemCalculation.Repositories
                 }
             }
 
-            // test
-            var groupedData = returnData
-            .GroupBy(r => r.DateTime.Date)
-            .Select(grp => new
+            // Calculating the average temperature
+            float averageTemperature = resultData.Average(r => r.Temperature);
+            // Calculating the average clouds value
+            float averageClouds = resultData.Average(r => r.CloudCover);
+            DateTime realDate = resultData[0].DateTime;
+
+            // Create a WeatherDTO object
+            WeatherDTO avgWeatherDTO = new WeatherDTO()
             {
-                Date = grp.Key,
-                AverageTemperature = grp.Average(item => item.Temperature)
-            })
-            .ToList();
-
-
-
-            return returnData;
+                DateTime = realDate,
+                Temperature = averageTemperature,
+                CloudCover = averageClouds
+            };
+            return avgWeatherDTO;
         }
     }
 }

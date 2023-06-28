@@ -35,7 +35,9 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                             monthlIndexs.Add(monthlIndex);
 
                             float monthlyValue = monthlyData.Value<float>("H(i)_m");
-                            monthlyValues.Add(monthlyValue);
+                            //Convert (W/m²) into (kW/m²)
+                            float monthlyValueKw = monthlyValue / 1000;
+                            monthlyValues.Add(monthlyValueKw);
                         }
                     }
                     else

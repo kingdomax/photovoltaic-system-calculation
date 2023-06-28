@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 // Register your services here
 builder.Services.AddDbContext<SQLLiteContext>();
 builder.Services.AddScoped<ISolarAPI, SolarAPI>();
-builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IWeatherForecastAPI, WeatherForecastAPI>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
 builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
