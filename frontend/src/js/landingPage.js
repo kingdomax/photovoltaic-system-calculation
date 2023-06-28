@@ -4,28 +4,31 @@ import * as navbar from './navbarModule.js';
 import * as profilePage from './profilePage.js';
 import * as projectListPage from './projectListPage.js';
 
-let state = { currentPage: 'profile', };
+let state = { currentPage: 'profile', }; // central state
 export function getState() { JSON.parse(JSON.stringify(state)); }
 export function pageChange(page) { 
     state.currentPage = page;
     reRender();
 }
 function reRender() {
-    document.getElementsByClassName("profile-page")[0].style.display = "none";
-    document.getElementsByClassName("project-list-page")[0].style.display = "none";
-    //document.getElementsByClassName("project-page")[0].style.display = "none";
+    document.querySelector('.profile-page').style.display = 'none';
+    document.querySelector('.project-list-page').style.display = 'none';
+    document.querySelector('.project-page').style.display = 'none';
 
     switch (state.currentPage){
-        case "profile":     document.getElementsByClassName("profile-page")[0].style.display = "block";
+        case 'profile':     document.querySelector('.profile-page').style.display = 'block';
                             break;
-        case "projectList": document.getElementsByClassName("project-list-page")[0].style.display = "block";
+        case 'projectList': document.querySelector('.project-list-page').style.display = 'block';
                             break;
-        //case "project": ;
+        case 'project':     document.querySelector('.project-page').style.display = 'block';
+                            break;
     }
 }
 
-if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }
-navbar.init();
-profilePage.init();
-projectListPage.init();
-// projectPage.init();
+export function initLandingPage() {
+    if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }    
+    navbar.init();
+    profilePage.init();
+    projectListPage.init();
+    // projectPage.init();
+}

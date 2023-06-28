@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Photovoltaic System Calculation</title>
-    <script type="module" src="./js/landingPage.js"></script>
+    <!-- <script type="module" src="./js/landingPage.js"></script> -->
   </head>
   <body class="bg-body-tertiary">
     <main class="d-flex flex-nowrap">
@@ -32,7 +32,7 @@
           <li>
             <a id="project" href="javascript:void(0)" class="nav-link text-white">
               <svg class="bi pe-none me-2 ms-4" width="16" height="16"><use xlink:href="#arrowRight"/></svg>
-              Project Name
+              Project
             </a>
           </li>
         </ul>
@@ -44,7 +44,7 @@
             <strong id="navUserEmail">mdo</strong>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a id="navCreateProject" class="dropdown-item" href="#">New project...</a></li>
             <li><a class="dropdown-item link-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a id="signoutBtn" class="dropdown-item" href="javascript:void(0)">Sign out</a></li>
@@ -116,42 +116,42 @@
 
         <!-- Project List-->
         <div class="project-list-page">
-          <button class="btn btn-primary btn-lg mt-3" type="submit">New project...</button>
-          <div class="my-3 px-3 pt-3 pb-5 bg-body rounded shadow-sm">
-              <small class="d-block border-bottom pb-3">
-                <a href="#">Active projects</a> <!-- All projects, Old projects -->
-              </small>
-              <div class="d-flex text-body-secondary pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                  <div class="d-flex justify-content-between">
-                    <strong class="text-gray-dark">Project Name</strong>
-                    <a href="#">edit</a>
-                  </div>
-                  <span class="d-block">created: 30 June 2023</span>
+          <button id="createProjectBtn" class="btn btn-primary btn-lg mt-3" type="submit">New project...</button>
+          <div class="project-list-container my-3 px-3 pt-3 pb-5 bg-body rounded shadow-sm">
+            <!-- <small class="d-block border-bottom pb-3">
+              <a href="#">Active projects</a>
+            </small>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">edit</a>
                 </div>
+                <span class="d-block">created: 30 June 2023</span>
               </div>
-              <div class="d-flex text-body-secondary pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                  <div class="d-flex justify-content-between">
-                    <strong class="text-gray-dark">Project Name</strong>
-                    <a href="#">edit</a>
-                  </div>
-                  <span class="d-block">created: 1 July 2023</span>
+            </div>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">edit</a>
                 </div>
+                <span class="d-block">created: 1 July 2023</span>
               </div>
-              <div class="d-flex text-body-secondary pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6c757d"/><text x="50%" y="50%" fill="#6c757d" dy=".3em">32x32</text></svg>
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                  <div class="d-flex justify-content-between">
-                    <strong class="text-gray-dark">Project Name</strong>
-                    <a href="#">view</a>
-                  </div>
-                  <span class="d-block">read-only</span>
+            </div>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6c757d"/><text x="50%" y="50%" fill="#6c757d" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">view</a>
                 </div>
+                <span class="d-block">read-only</span>
               </div>
-          </div>      
+            </div> -->
+          </div>   
         </div>
 
         <!-- Project -->
@@ -189,5 +189,9 @@
         <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
       </symbol>
     </svg>
+    <script type="module">
+      import { initLandingPage } from './js/landingPage.js';
+      initLandingPage();
+    </script>
   </body>
 </html>

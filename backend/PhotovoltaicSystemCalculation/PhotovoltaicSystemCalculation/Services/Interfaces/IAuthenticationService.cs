@@ -6,7 +6,7 @@ namespace PhotovoltaicSystemCalculation.Services.Interfaces
     {
         public Task<string> ValidateUser(string email, string password);
         public Task<string> RegisterNewUser(string email, string password);
-        public Task DeleteUser(string userId);
-        public Task<UserInfo> UpdateUser(string userId, UserInfo newInfo, string newPassword);
+        public Task DeleteUser(int userId);
+        public Task<UserInfo> UpdateUser(int userId, UserInfo newInfo, string newPassword);
     }
 }

@@ -14,7 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<SQLLiteContext>();
 builder.Services.AddScoped<ISolarAPI, SolarAPI>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 

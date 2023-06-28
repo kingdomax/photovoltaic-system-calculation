@@ -14,7 +14,7 @@ function initSigninForm() {
         // Get the form fields
         const username = document.getElementById('floatingInput').value;
         const password = document.getElementById('floatingPassword').value;
-        const url = isSignup ? 'http://localhost:7070/Auth/Signup' : 'http://localhost:7070/Auth/Login';
+        const url = isSignup ? '/Auth/Signup' : '/Auth/Login';
     
         // Save the token and redirect the user
         const onSuccess = (data) => {
@@ -22,11 +22,7 @@ function initSigninForm() {
             window.location.href = '/landing.html';
         };
     
-        const onError = (error) => {
-            alert(`Login failed: ${error.message}`);
-        };
-    
-        fetchData(url, { Username: username, Password: password }, onSuccess, onError);
+        fetchData(url, { Username: username, Password: password }, onSuccess);
     });
 }
 

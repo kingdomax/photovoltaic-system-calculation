@@ -1,48 +1,63 @@
 import { fetchData } from "./fetchModule";
 import { pageChange } from "./landingPage";
+import { createProject } from "./projectListPage";
 import { getUsername } from "./helpers/userHelpers";
 
 export function init(){
-    initBodyPart();
-    initFooterPart();
+    initBodyPartUI();
+    initFooterPartEvent();
 }
 
-function initBodyPart() {
+export function navbarChange(tabName) {
+    const navLink = document.getElementById(tabName);
+    const navLinks = document.querySelectorAll('.nav-pills .nav-link');
+    highlightLink(navLink, navLinks);
+    pageChange(tabName);
+}
+
+function initBodyPartUI() {
     // nav links
     const navLinks = document.querySelectorAll('.nav-pills .nav-link');
     navLinks.forEach((navLink) => {
         navLink.addEventListener('click', (e) => {
-            // Remove 'active' and add 'text-white' classes for all <a> tags
-            navLinks.forEach((link) => {
-                link.classList.remove('active');
-                link.classList.add('text-white');
-            });
-
-            // Add 'active' and remove 'text-white' classes for the clicked <a> tag
-            navLink.classList.add('active');
-            navLink.classList.remove('text-white');
-
-            // re-render main section of landing page
-            pageChange(e.currentTarget.id);
+            highlightLink(e.currentTarget, navLinks);
+            pageChange(e.currentTarget.id); // re-render main section of landing page
         });
     });
 }
 
-function initFooterPart() {
+function highlightLink(navLink, navLinks) {
+    // Remove 'active' and add 'text-white' classes for all <a> tags
+    navLinks.forEach((link) => {
+        link.classList.remove('active');
+        link.classList.add('text-white');
+    });
+
+    // Add 'active' and remove 'text-white' classes for the clicked <a> tag
+    navLink.classList.add('active');
+    navLink.classList.remove('text-white');
+}
+
+function initFooterPartEvent() {
     const logoutFunc = () => {
         sessionStorage.removeItem('usertoken');
         window.location.href = '/index.html';
     };
     
-    // profile picture
+    // display username
     document.getElementById('navUserEmail').innerText = getUsername();
 
-    // delete account button
-    document.getElementById('confirmDeleteAccount').addEventListener('click', (event) => {
-        fetchData('http://localhost:7070/Auth/DeleteAccount', null, logoutFunc, (error) => { alert(`Failed: ${error.message}`); });
+    // bind create project button
+    document.getElementById('navCreateProject').addEventListener('click', (event) => {
+        createProject();
     });
 
-    // logout button
+    // bind delete account button event
+    document.getElementById('confirmDeleteAccount').addEventListener('click', (event) => {
+        fetchData('/Auth/DeleteAccount', null, logoutFunc);
+    });
+
+    // bind logout button event
     document.getElementById('signoutBtn').addEventListener('click', (event) => {
         logoutFunc();
     });

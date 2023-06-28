@@ -26,21 +26,21 @@ namespace PhotovoltaicSystemCalculation.Services
             return GenerateUserToken(createdUser);
         }
 
-        public async Task DeleteUser(string userId)
+        public async Task DeleteUser(int userId)
         {
             try 
             { 
-                await _userAccountRepository.DeleteUser(Convert.ToInt32(userId)); 
+                await _userAccountRepository.DeleteUser(userId); 
             }
             catch (ArgumentException e) { throw new Exception("User does not exist", e); }
             catch (Exception e) { throw new Exception("An error occurred when deleting user", e); }
         }
 
-        public async Task<UserInfo> UpdateUser(string userId, UserInfo newInfo, string newPassword)
+        public async Task<UserInfo> UpdateUser(int userId, UserInfo newInfo, string newPassword)
         {
             try
             {
-                var updatedUser = await _userAccountRepository.UpdateUser(Convert.ToInt32(userId), newInfo, newPassword);
+                var updatedUser = await _userAccountRepository.UpdateUser(userId, newInfo, newPassword);
 
                 return new UserInfo
                 {
