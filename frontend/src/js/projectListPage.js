@@ -80,8 +80,8 @@ function handleToggleProject() {
             const isActive = item.getAttribute('data-active') === 'true';
             item.style.setProperty('display', isActive ? 'flex' : 'none', 'important');
         });
-        toggleProjectButton.textContent = 'Old projects';
-    } else if (toggleText === 'Old projects') { // Show only old projects
+        toggleProjectButton.textContent = 'Inactive projects';
+    } else if (toggleText === 'Inactive projects') { // Show only old projects
         projectItems.forEach(item => {
             const isActive = item.getAttribute('data-active') === 'true';
             item.style.setProperty('display', isActive ? 'none' : 'flex', 'important');

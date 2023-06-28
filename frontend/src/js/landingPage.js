@@ -1,16 +1,17 @@
 import '../scss/landing-page.scss';
 import * as bootstrap from 'bootstrap';
 import { fetchData } from './fetchModule';
-import * as navbar from './navbarModule.js';
-import * as profilePage from './profilePage.js';
-import * as projectListPage from './projectListPage.js';
+import * as navbar from './navbarModule';
+import * as projectPage from './projectPage';
+import * as profilePage from './profilePage';
+import * as projectListPage from './projectListPage';
 
 export function initLandingPage() {
     if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }    
     navbar.init();
     profilePage.init();
     projectListPage.init();
-    // projectPage.init();
+    projectPage.init();
 }
 
 let state = { currentPage: 'profile', currentProject: -1, targetDeleteProject: -1 }; // central state of page
