@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 // Register your services here
 builder.Services.AddDbContext<SQLLiteContext>();
 builder.Services.AddScoped<ISolarAPI, SolarAPI>();
-builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IWeatherForecastAPI, WeatherForecastAPI>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin", builder => {
         // Replace with the client-side address
         builder.WithOrigins("http://localhost:8080").AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins("http://127.0.0.1:8080").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
