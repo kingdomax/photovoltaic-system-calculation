@@ -1,11 +1,11 @@
 import { fetchData } from './fetchModule.js';
 
 export function init(){
-    renderUserInfo();
-    bindingFormEvent();
+    initialRenderUserInfo();
+    bindEvents();
 }
 
-function renderUserInfo() {
+function initialRenderUserInfo() {
     // set everything to empty to get user info from server
     const emptyInfo = {
         userInfo: {
@@ -30,10 +30,11 @@ function renderUserInfo() {
         document.getElementById('email').value = response.userInfo.email || "";
     };
 
+    // This is initial rendering, not actual editing HTTP request
     editUserInfo(emptyInfo, fillFormWithUserInfo);
 }
 
-function bindingFormEvent() {
+function bindEvents() {
     document.getElementById('editForm').addEventListener('submit', (event) => {
         const newUserInfo = {
             userInfo: {
@@ -52,10 +53,5 @@ function bindingFormEvent() {
 }
 
 function editUserInfo(requestBody, onSuccess) {
-    fetchData(
-        'http://localhost:7070/Auth/EditProfile',
-        requestBody,
-        onSuccess || ((response) => {}),
-        (error) => { alert(`Login failed: ${error.message}`); }
-    );
+    fetchData('/Auth/EditProfile', requestBody, onSuccess || ((response) => {}));
 }

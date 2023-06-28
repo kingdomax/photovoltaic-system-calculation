@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PhotovoltaicSystemCalculation.ActionFilterAttributes;
 using PhotovoltaicSystemCalculation.Models;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 
@@ -30,14 +31,12 @@ namespace PhotovoltaicSystemCalculation.Controllers
         }
 
         [HttpPost("DeleteAccount")]
+        [UserExtractionFilter]
         public async Task<IActionResult> DeleteAccount([FromHeader] string Authorization)
         {
-            if (string.IsNullOrEmpty(Authorization)) { return Unauthorized("Unauthorized"); }
-
-            var userId = Authorization.Split('.')[0];
             try
             {
-                await _authenticationService.DeleteUser(userId);
+                await _authenticationService.DeleteUser((int) HttpContext.Items["UserId"]);
                 return Ok(new { });
             }
             catch (Exception e)
@@ -47,14 +46,12 @@ namespace PhotovoltaicSystemCalculation.Controllers
         }
 
         [HttpPost("EditProfile")]
+        [UserExtractionFilter]
         public async Task<IActionResult> EditProfile([FromBody] EditProfileRequest request, [FromHeader] string Authorization)
         {
-            if (string.IsNullOrEmpty(Authorization)) { return Unauthorized("Unauthorized"); }
-
-            var userId = Authorization.Split('.')[0];
             try
             {
-                var updatedInfo = await _authenticationService.UpdateUser(userId, request.UserInfo, request.NewPassword);
+                var updatedInfo = await _authenticationService.UpdateUser((int) HttpContext.Items["UserId"], request.UserInfo, request.NewPassword);
                 return Ok(new { UserInfo = updatedInfo });
             }
             catch (Exception e)

@@ -1,29 +1,46 @@
 import '../scss/landing-page.scss';
 import * as bootstrap from 'bootstrap';
+import { fetchData } from './fetchModule';
 import * as navbar from './navbarModule.js';
 import * as profilePage from './profilePage.js';
+import * as projectListPage from './projectListPage.js';
 
-let state = { currentPage: 'profile', };
-export function getState() { JSON.parse(JSON.stringify(state)); }
-export function pageChange(page) { 
-    state.currentPage = page;
-    reRender();
+export function initLandingPage() {
+    if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }    
+    navbar.init();
+    profilePage.init();
+    projectListPage.init();
+    // projectPage.init();
 }
-function reRender() {
-    document.getElementsByClassName("profile-page")[0].style.display = "none";
-    document.getElementsByClassName("project-list-page")[0].style.display = "none";
-    //document.getElementsByClassName("project-page")[0].style.display = "none";
 
-    switch (state.currentPage){
-        case "profile": document.getElementsByClassName("profile-page")[0].style.display = "block";
-        case "projectList": document.getElementsByClassName("project-list-page")[0].style.display = "block";
-        //case "project": ;
+let state = { currentPage: 'profile', currentProject: -1, targetDeleteProject: -1 }; // central state of page
+export function getState() { return JSON.parse(JSON.stringify(state)); }
+export function updateState(newState, enableReRender = true) { 
+    state = { ...state, ...newState };
+    if (enableReRender) {
+        sideEffect();
+        reRender();
     }
 }
+function sideEffect() {
+    switch (state.currentPage){
+        case 'projectList':     fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
+                                break;
+        //case 'project':       fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
+        //                      break;
+    }
+}
+function reRender() {
+    document.querySelector('.profile-page').style.display = 'none';
+    document.querySelector('.project-list-page').style.display = 'none';
+    document.querySelector('.project-page').style.display = 'none';
 
-if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }
-navbar.init();
-profilePage.init();
-// projectList.init();
-// projectPage.init();
-reRender();
+    switch (state.currentPage){
+        case 'profile':     document.querySelector('.profile-page').style.display = 'block';
+                            break;
+        case 'projectList': document.querySelector('.project-list-page').style.display = 'block';
+                            break;
+        case 'project':     document.querySelector('.project-page').style.display = 'block';
+                            break;
+    }
+}

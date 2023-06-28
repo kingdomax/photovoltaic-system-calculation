@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Photovoltaic System Calculation</title>
-    <script type="module" src="./js/landingPage.js"></script>
+    <!-- <script type="module" src="./js/landingPage.js"></script> -->
   </head>
   <body class="bg-body-tertiary">
     <main class="d-flex flex-nowrap">
@@ -32,7 +32,7 @@
           <li>
             <a id="project" href="javascript:void(0)" class="nav-link text-white">
               <svg class="bi pe-none me-2 ms-4" width="16" height="16"><use xlink:href="#arrowRight"/></svg>
-              Project Name...
+              Project
             </a>
           </li>
         </ul>
@@ -44,7 +44,7 @@
             <strong id="navUserEmail">mdo</strong>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a data-bs-toggle="modal" data-bs-target="#createProjectModal" class="dropdown-item" href="#">New project...</a></li>
             <li><a class="dropdown-item link-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a id="signoutBtn" class="dropdown-item" href="javascript:void(0)">Sign out</a></li>
@@ -116,6 +116,42 @@
 
         <!-- Project List-->
         <div class="project-list-page">
+          <button class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#createProjectModal" type="button">New project...</button>
+          <div class="project-list-container my-3 px-3 pt-3 pb-5 bg-body rounded shadow-sm">
+            <!-- <small class="d-block border-bottom pb-3">
+              <a href="#">Active projects</a>
+            </small>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">edit</a>
+                </div>
+                <span class="d-block">created: 30 June 2023</span>
+              </div>
+            </div>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">edit</a>
+                </div>
+                <span class="d-block">created: 1 July 2023</span>
+              </div>
+            </div>
+            <div class="d-flex text-body-secondary pt-3">
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6c757d"/><text x="50%" y="50%" fill="#6c757d" dy=".3em">32x32</text></svg>
+              <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                  <strong class="text-gray-dark">Project Name</strong>
+                  <a href="#">view</a>
+                </div>
+                <span class="d-block">read-only</span>
+              </div>
+            </div> -->
+          </div>   
         </div>
 
         <!-- Project -->
@@ -124,8 +160,8 @@
       </div>
     </main>
 
-    <!-- Modal -->
-    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteAccountModal">
+    <!-- Delete Account Modal -->
+    <div class="modal modal-sheet fade bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="deleteAccountModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content rounded-3 shadow">
           <div class="modal-body p-4 text-center">
@@ -134,6 +170,44 @@
           </div>
           <div class="modal-footer flex-nowrap p-0">
             <button id="confirmDeleteAccount" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Delete</strong></button>
+            <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="createProjectModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Create Project</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+    
+          <div class="modal-body p-5 pt-0">
+            <form id="createProjectForm">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" id="createProjectName" placeholder="Project Name" required>
+                <label for="createProjectName">Give it a name</label>
+              </div>
+              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" data-bs-dismiss="modal">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Project Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteProjectModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-body p-4 text-center">
+            <h5 class="text-danger mb-3">Confirm Project Deletion</h5>
+            <p class="mb-0">All associated data will be permanently lost and cannot be recovered. Please consider carefully before proceeding.</p>
+          </div>
+          <div class="modal-footer flex-nowrap p-0">
+            <button id="confirmDeleteProject" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" data-bs-dismiss="modal"><strong>Delete</strong></button>
             <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -153,5 +227,9 @@
         <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
       </symbol>
     </svg>
+    <script type="module">
+      import { initLandingPage } from './js/landingPage.js';
+      initLandingPage();
+    </script>
   </body>
 </html>

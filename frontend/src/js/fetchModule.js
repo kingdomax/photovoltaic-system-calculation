@@ -1,5 +1,5 @@
-export function fetchData(url, requestBody, onSuccess, onError) {
-    fetch(url, {
+export function fetchData(url, requestBody, onSuccess) {
+    fetch(`http://localhost:7070${url}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,5 +16,7 @@ export function fetchData(url, requestBody, onSuccess, onError) {
         return response.json();
     })
     .then(onSuccess)
-    .catch(onError);
+    .catch((error) => { 
+        alert(`Error ${url}: ${error.message}`); 
+    });
 }
