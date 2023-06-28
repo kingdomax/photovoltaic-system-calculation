@@ -1,34 +1,65 @@
 ﻿using PhotovoltaicSystemCalculation.ExternalAPI.Models;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace PhotovoltaicSystemCalculation.ExternalAPI
 {
     public class SolarAPI : ISolarAPI
     {
-        public async Task<SolarDTO> FetchSolarInformation(int year)
+        public async Task<SolarDTO> FetchSolarInformation(float latitude, float longitude, int inclination, int orientation)
         {
             // TODO: This method willcall solar API to get solar information
-            var mockData = new SolarDTO
+            List<int> monthlIndexs = new List<int>();
+            List<float> monthlyValues = new List<float>();
+            // Call PVGIS API to calculate Solar Irradiance
+            using (HttpClient client = new HttpClient())
             {
-                Year = 2023,
-                Irradiance = new Dictionary<int, float>()
+                try
                 {
-                    { 1, 1f },
-                    { 2, 5f },
-                    { 3, 10f },
-                    { 4, 15f },
-                    { 5, 20f },
-                    { 6, 1f },
-                    { 7, 1f },
-                    { 8, 1f },
-                    { 9, 1f },
-                    { 10, 1f },
-                    { 11, 1f },
-                    { 12, 1f },
-                }
-            };
+                    HttpResponseMessage response = await client.GetAsync("https://re.jrc.ec.europa.eu/api/v5_2/MRcalc?lat=" + latitude + "&" + "lon=" + longitude + "&selectrad=1&outputformat=json&startyear=2020&endyear=2020&angle=" + inclination + "&aspect=" + orientation);
 
-            return mockData;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        // Parse the response body into a JSON object
+                        JObject json = JObject.Parse(responseBody);
+
+                        // Extract all "month" and "H(i)_m" values
+                        JArray monthlyArray = (JArray)json["outputs"]["monthly"];
+
+                        foreach (JObject monthlyData in monthlyArray)
+                        {
+                            int monthlIndex = monthlyData.Value<int>("month");
+                            monthlIndexs.Add(monthlIndex);
+
+                            float monthlyValue = monthlyData.Value<float>("H(i)_m");
+                            //Convert (W/m²) into (kW/m²)
+                            float monthlyValueKw = monthlyValue / 1000;
+                            monthlyValues.Add(monthlyValueKw);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("The API request was not successful. Status code: " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
+
+            // Create a dictionary from the lists
+            Dictionary<int, float> irradiance = monthlIndexs.Zip(monthlyValues, (key, value) => new { key, value })
+                                                            .ToDictionary(pair => pair.key, pair => pair.value);
+
+            var returnData = new SolarDTO
+            {
+                Irradiance = irradiance
+            };
+            return returnData;
         }
     }
 }

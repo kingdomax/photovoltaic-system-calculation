@@ -4,6 +4,6 @@ namespace PhotovoltaicSystemCalculation.Services.Interfaces
 {
     public interface IPhotovoltaicService
     {
-        public Task<float> CaculateElectricProduction(ElectricProductionArgs args);
+        public Task<IList<ElectricProduction>> CaculateElectricProduction(ElectricProductionArgs args);
     }
 }
