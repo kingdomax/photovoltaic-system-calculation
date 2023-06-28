@@ -45,5 +45,20 @@ namespace PhotovoltaicSystemCalculation.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = $"An error occurred: {ex.Message}" });
             }
         }
+
+        [HttpPost("DeleteProject")]
+        [UserExtractionFilter]
+        public async Task<IActionResult> DeleteProject(DeleteProjectRequest request)
+        {
+            try
+            {
+                var projects = await _projectService.DeleteProject((int)HttpContext.Items["UserId"], request);
+                return projects != null ? Ok(projects) : NotFound(new { Message = "Project not found or user not authorized." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = $"An error occurred: {ex.Message}" });
+            }
+        }
     }
 }

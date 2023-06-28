@@ -1,6 +1,5 @@
 import { fetchData } from "./fetchModule";
-import { pageChange } from "./landingPage";
-import { createProject } from "./projectListPage";
+import { updateState } from "./landingPage";
 import { getUsername } from "./helpers/userHelpers";
 
 export function init(){
@@ -12,18 +11,7 @@ export function navbarChange(tabName) {
     const navLink = document.getElementById(tabName);
     const navLinks = document.querySelectorAll('.nav-pills .nav-link');
     highlightLink(navLink, navLinks);
-    pageChange(tabName);
-}
-
-function initBodyPartUI() {
-    // nav links
-    const navLinks = document.querySelectorAll('.nav-pills .nav-link');
-    navLinks.forEach((navLink) => {
-        navLink.addEventListener('click', (e) => {
-            highlightLink(e.currentTarget, navLinks);
-            pageChange(e.currentTarget.id); // re-render main section of landing page
-        });
-    });
+    updateState({ currentPage: tabName });
 }
 
 function highlightLink(navLink, navLinks) {
@@ -38,6 +26,17 @@ function highlightLink(navLink, navLinks) {
     navLink.classList.remove('text-white');
 }
 
+function initBodyPartUI() {
+    // nav links
+    const navLinks = document.querySelectorAll('.nav-pills .nav-link');
+    navLinks.forEach((navLink) => {
+        navLink.addEventListener('click', (e) => {
+            highlightLink(e.currentTarget, navLinks);
+            updateState({ currentPage: e.currentTarget.id }); // re-render main section of landing page
+        });
+    });
+}
+
 function initFooterPartEvent() {
     const logoutFunc = () => {
         sessionStorage.removeItem('usertoken');
@@ -46,11 +45,6 @@ function initFooterPartEvent() {
     
     // display username
     document.getElementById('navUserEmail').innerText = getUsername();
-
-    // bind create project button
-    document.getElementById('navCreateProject').addEventListener('click', (event) => {
-        createProject();
-    });
 
     // bind delete account button event
     document.getElementById('confirmDeleteAccount').addEventListener('click', (event) => {

@@ -59,5 +59,17 @@ namespace PhotovoltaicSystemCalculation.Services
                 throw new Exception($"An error occurred while creating a new project: {ex.Message}");
             }
         }
+        public async Task<IList<Project>> DeleteProject(int userId, DeleteProjectRequest request)
+        {
+            try
+            {
+                var result = await _projectRepository.DeleteProject(userId, request.ProjectId);
+                return result ? await GetProjects(userId) : null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while deleting a project: {ex.Message}");
+            }
+        }
     }
 }

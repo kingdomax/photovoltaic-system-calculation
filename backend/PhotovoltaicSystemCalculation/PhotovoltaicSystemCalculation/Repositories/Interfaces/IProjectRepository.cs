@@ -6,5 +6,6 @@ namespace PhotovoltaicSystemCalculation.Repositories.Interfaces
     {
         public Task<IList<ProjectDTO>> GetProjects(int userId);
         public Task<ProjectDTO> CreateProject(ProjectDTO newProject);
+        public Task<bool> DeleteProject(int userId, int projectId);
     }
 }

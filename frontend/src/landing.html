@@ -44,7 +44,7 @@
             <strong id="navUserEmail">mdo</strong>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li><a id="navCreateProject" class="dropdown-item" href="#">New project...</a></li>
+            <li><a data-bs-toggle="modal" data-bs-target="#createProjectModal" class="dropdown-item" href="#">New project...</a></li>
             <li><a class="dropdown-item link-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete account</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a id="signoutBtn" class="dropdown-item" href="javascript:void(0)">Sign out</a></li>
@@ -116,7 +116,7 @@
 
         <!-- Project List-->
         <div class="project-list-page">
-          <button id="createProjectBtn" class="btn btn-primary btn-lg mt-3" type="submit">New project...</button>
+          <button class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#createProjectModal" type="button">New project...</button>
           <div class="project-list-container my-3 px-3 pt-3 pb-5 bg-body rounded shadow-sm">
             <!-- <small class="d-block border-bottom pb-3">
               <a href="#">Active projects</a>
@@ -160,8 +160,8 @@
       </div>
     </main>
 
-    <!-- Modal -->
-    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteAccountModal">
+    <!-- Delete Account Modal -->
+    <div class="modal modal-sheet fade bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog" id="deleteAccountModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content rounded-3 shadow">
           <div class="modal-body p-4 text-center">
@@ -170,6 +170,44 @@
           </div>
           <div class="modal-footer flex-nowrap p-0">
             <button id="confirmDeleteAccount" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Delete</strong></button>
+            <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="createProjectModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Create Project</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+    
+          <div class="modal-body p-5 pt-0">
+            <form id="createProjectForm">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" id="createProjectName" placeholder="Project Name" required>
+                <label for="createProjectName">Give it a name</label>
+              </div>
+              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" data-bs-dismiss="modal">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Project Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteProjectModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-body p-4 text-center">
+            <h5 class="text-danger mb-3">Confirm Project Deletion</h5>
+            <p class="mb-0">All associated data will be permanently lost and cannot be recovered. Please consider carefully before proceeding.</p>
+          </div>
+          <div class="modal-footer flex-nowrap p-0">
+            <button id="confirmDeleteProject" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" data-bs-dismiss="modal"><strong>Delete</strong></button>
             <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
