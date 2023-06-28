@@ -2,8 +2,8 @@
 {
     public class WeatherDTO
     {
-        public DateTime Date { get; set; }
-        public float CloudCover { get; set; }
-        public float Temperature { get; set; } // Kelvin
+        public DateTime DateTime { get; set; }
+        public float Temperature { get; set; }
+        public int CloudCover { get; set; }
     }
 }

@@ -20,8 +20,8 @@ namespace PhotovoltaicSystemCalculation.Services
 
         public async Task<float> CaculateElectricProduction(ElectricProductionArgs args)
         {
-            var sunInfo = await _solarAPI.FetchSolarInformation(args.Year); // call solar API to get sun information for the entire year
-            var weatherInfo = await _weatherRepository.GetWeatherForecast(args.Month, args.Year); // call db to get weather for specific month
+            var sunInfo = await _solarAPI.FetchSolarInformation(args.Latitude, args.Longitude, args.Inclination, args.Orientation); // call solar API to get sun information for the entire year
+            var weatherInfo = await _weatherRepository.GetWeatherForecast(args.Latitude, args.Longitude, args.StartDate, args.EndDate); // call weather API to get weather for specific date
 
             return CaculateElectricProductionPerDay(args, sunInfo, weatherInfo);
         }
