@@ -2,6 +2,7 @@
 {
     public class WeatherDTO
     {
+        public int Id { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public DateTime DateTime { get; set; }
