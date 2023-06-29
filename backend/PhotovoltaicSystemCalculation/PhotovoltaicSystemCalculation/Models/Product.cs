@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public string Brand { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public float Area { get; set; }

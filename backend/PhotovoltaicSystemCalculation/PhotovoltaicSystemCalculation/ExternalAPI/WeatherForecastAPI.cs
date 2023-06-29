@@ -33,7 +33,7 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
 
         private async Task<WeatherDTO> GetAverageWeatherForecastPerDay(float latitude, float longitude, long date)
         {
-            // Call OpenWeather API to get Clound and Tempurature data
+            // Call OpenWeather API to get Cloud and Tempurature data from Historical API
             var resultData = new List<WeatherDTO>();
 
             using (HttpClient client = new HttpClient())
@@ -107,8 +107,66 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
 
         public async Task<WeatherDTO> GetDialyWeatherForCronjob(float latitude, float longitude)
         {
-            // TODO: call api to get Temperature & CloudCover
+            // Call OpenWeather API to get Cloud and Tempurature data from Daily API
+            var resultData = new List<WeatherDTO>();
 
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync("https://history.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=1&appid=cf5ead8af14c2db62245cc31d7fcf794");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        // Parse the response body into a JSON object
+                        JObject json = JObject.Parse(responseBody);
+                        JArray weatherDataArray = (JArray)json["list"];
+                        foreach (JObject weatherData in weatherDataArray)
+                        {
+                            // Extract "dt" value (timestamp) and convert to DateTime
+                            long unixTimestamp = weatherData.Value<long>("dt");
+                            DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime.Date;
+
+                            // Extract "temp" value
+                            JObject temperatureObject = (JObject)weatherData["main"];
+                            float temperatureValueK = temperatureObject.Value<float>("temp");
+
+                            // Convert temperature Kelvin to Celsius
+                            float temperatureValueC = temperatureValueK - 273.15f;
+
+                            // Extract "clouds" value
+                            JObject cloudsObject = (JObject)weatherData["clouds"];
+                            float cloudsValue = cloudsObject.Value<int>("all") / 100f;
+
+                            // Create a WeatherDTO object
+                            WeatherDTO weatherDTO = new WeatherDTO()
+                            {
+                                DateTime = dateTime,
+                                Temperature = temperatureValueC,
+                                CloudCover = cloudsValue
+                            };
+
+                            // Add the WeatherDTO object to the result list
+                            resultData.Add(weatherDTO);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("The API request was not successful. Status code: " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
+
+
+
+
+            // mock
             return new WeatherDTO()
             {
                 Latitude = latitude,

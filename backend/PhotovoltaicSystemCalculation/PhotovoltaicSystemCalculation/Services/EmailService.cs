@@ -38,11 +38,12 @@ namespace PhotovoltaicSystemCalculation.Services
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
-                var groupedReportData = reportData.GroupBy(r => new { r.Product.Latitude, r.Product.Longitude });
+                var groupedReportData = reportData.GroupBy(r => new { r.Product.Id });
 
                 foreach (var group in groupedReportData)
                 {
-                    var ws = package.Workbook.Worksheets.Add($"Lat {group.Key.Latitude} Long {group.Key.Longitude}");
+                    var firstItemInGroup = group.First();
+                    var ws = package.Workbook.Worksheets.Add($"Product ID:{firstItemInGroup.Product.Id} {firstItemInGroup.Product.Brand}");
 
                     ws.Cells["A1"].Value = "ProductName";
                     ws.Cells["B1"].Value = "Latitude";
@@ -88,7 +89,7 @@ namespace PhotovoltaicSystemCalculation.Services
 
             mail.From = new MailAddress("dbw.project.2023@gmail.com");
             mail.To.Add(email);
-            mail.Subject = $"Report for Project {projectName}";
+            mail.Subject = $"Electric Produces Report of Project {projectName}";
             mail.Body = emailBody.ToString();
 
             Attachment attachment = new Attachment(fileName);
