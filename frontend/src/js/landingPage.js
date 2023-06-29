@@ -1,30 +1,30 @@
 import '../scss/landing-page.scss';
-import * as bootstrap from 'bootstrap';
+//import * as bootstrap from 'bootstrap';
 import { fetchData } from './fetchModule';
 import * as navbar from './navbarModule';
 import * as projectPage from './projectPage';
 import * as profilePage from './profilePage';
 import * as projectListPage from './projectListPage';
 
-export function initLandingPage() {
-    if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }    
-    navbar.init();
-    profilePage.init();
-    projectListPage.init();
-    projectPage.init();
-}
-
-let state = { currentPage: 'profile', currentProject: null, targetDeleteProject: -1 }; // central state of page
-export function getState() { return JSON.parse(JSON.stringify(state)); }
+// Central state (assign to window for debug purpose)
+window.state = { 
+    currentPage: 'profile',
+    currentProject: null, // same as Project.cs
+    targetDeleteProject: -1,
+    currentProduct: { // same as Product.cs
+        id: -1,
+    }
+};
+export function getState() { return JSON.parse(JSON.stringify(window.state)); }
 export function updateState(newState, enableReRender = true) { 
-    state = { ...state, ...newState };
+    window.state = { ...window.state, ...newState };
     if (enableReRender) {
         sideEffect();
         reRender();
     }
 }
 function sideEffect() {
-    switch (state.currentPage){
+    switch (window.state.currentPage){
         case 'projectList':     fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
                                 break;
         case 'project':         projectPage.renderProjectPage();
@@ -36,7 +36,7 @@ function reRender() {
     document.querySelector('.project-list-page').style.display = 'none';
     document.querySelector('.project-page').style.display = 'none';
 
-    switch (state.currentPage){
+    switch (window.state.currentPage){
         case 'profile':     document.querySelector('.profile-page').style.display = 'block';
                             break;
         case 'projectList': document.querySelector('.project-list-page').style.display = 'block';
@@ -44,4 +44,12 @@ function reRender() {
         case 'project':     document.querySelector('.project-page').style.display = 'block';
                             break;
     }
+}
+
+export function initLandingPage() {
+    if (!sessionStorage.getItem('usertoken')) { window.location.href = '/index.html'; }    
+    navbar.init();
+    profilePage.init();
+    projectListPage.init();
+    projectPage.init();
 }

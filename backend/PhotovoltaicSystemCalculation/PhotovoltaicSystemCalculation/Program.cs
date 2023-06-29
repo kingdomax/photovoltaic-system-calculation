@@ -25,7 +25,6 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
-
 // Configure CORS here
 builder.Services.AddCors(options =>
 {

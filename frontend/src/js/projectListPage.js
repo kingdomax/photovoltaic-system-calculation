@@ -12,7 +12,6 @@ export function init() {
         createProject();
     });
     document.getElementById('confirmDeleteProject').addEventListener('click', (event) => { // bind delete button project (in modal)
-        console.log('confirmDeleteProject()');
         fetchData('/Project/DeleteProject', { ProjectId: getState().targetDeleteProject }, renderProjectList);
         updateState({ targetDeleteProject: -1, currentProject: null });
     });
@@ -40,7 +39,7 @@ export function renderProjectList(projectList) {
         let formattedDate = `${createdAtDate.getDate()} ${createdAtDate.toLocaleString('default', { month: 'long' })} ${createdAtDate.getFullYear()}`;
         let projectStatus = project.status ? `created: ${formattedDate}` : 'read-only';
 
-        let projectItem = `<div class="d-flex text-body-secondary pt-3" data-id="${project.id}" data-active="${project.status}">
+        let projectItem = `<div class="project-item d-flex text-body-secondary pt-3" data-id="${project.id}" data-active="${project.status}">
                                 <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="${color}"/><text x="50%" y="50%" fill="${color}" dy=".3em">32x32</text></svg>
                                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
                                 <div class="d-flex justify-content-between">
@@ -96,22 +95,25 @@ function handleToggleProject() {
 }
 
 function handleEditViewButton(event) {
-    const projectItem = event.target.closest('.text-body-secondary');
-    const projectId = parseInt(projectItem.dataset.id, 10);
-    const projectName = projectItem.querySelector('.project-name').textContent;
-    updateState({ currentProject: { id: projectId, name: projectName } }, false);
+    const projectItem = event.target.closest('.project-item');
+
+    const id = parseInt(projectItem.dataset.id, 10);
+    const status = projectItem.dataset.active === 'true';
+    const name = projectItem.querySelector('.project-name').textContent;
+
+    updateState({ currentProject: { id, name, status } }, false);
     navbarChange('project');
 }
   
 function handleDeleteButton(event) {
-    const projectItem = event.target.closest('.text-body-secondary');
+    const projectItem = event.target.closest('.project-item');
     const projectId = parseInt(projectItem.dataset.id, 10);
     updateState({ targetDeleteProject: projectId }, false);
 }
 
 export function createProject() {
     const goToProjectPage = (project) => {
-        updateState({ currentProject: { id: project.projectId, name: project.projectName } }, false);
+        updateState({ currentProject: { id: project.id, name: project.name, status: project.status } }, false);
         navbarChange('project');
     };
     fetchData('/Project/CreateProject', { Name: document.getElementById('createProjectName').value }, goToProjectPage);

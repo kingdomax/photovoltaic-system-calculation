@@ -19,6 +19,26 @@ namespace PhotovoltaicSystemCalculation.Repositories
             return await _context.Products.Where(p => p.ProjectId == projectId).ToListAsync();
         }
 
+        public async Task AddProduct(ProductDTO productDTO)
+        {
+            await _context.Products.AddAsync(productDTO);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditProduct(ProductDTO productDTO)
+        {
+            var existingProduct = await _context.Products.FindAsync(productDTO.Id);
+            if (existingProduct != null)
+            {
+                _context.Entry(existingProduct).CurrentValues.SetValues(productDTO);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception($"Product with ID {productDTO.Id} not found.");
+            }
+        }
+
         public async Task<bool> DeleteProducts(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
