@@ -5,6 +5,7 @@ using PhotovoltaicSystemCalculation.Services.Interfaces;
 using System.Globalization;
 using System.Net.Mail;
 using System.Text;
+using OfficeOpenXml;
 
 namespace PhotovoltaicSystemCalculation.Services
 {
@@ -21,62 +22,82 @@ namespace PhotovoltaicSystemCalculation.Services
 
         public async Task<bool> SendReport(IList<ReportData> reportData, int userId)
         {
-            //Get recipient Email
+            string fileName;
+
+            //Get recipient Email and project name
             UserDTO user = await _userAccountRepository.GetUser(userId);
             string email = user.Email;
 
             ProjectDTO project = await _projectRepository.GetProject(reportData[0].Product.ProjectId);
             string projectName = project.Name;
 
-            string email1 = "patboke.jit@gmail.com";
-
             StringBuilder emailBody = new StringBuilder();
-            emailBody.AppendLine($"Project: {projectName}");
+            emailBody.AppendLine($"Report 30 Days Electric Produce of All products of the Project: {projectName}");
 
-            StringBuilder csvContent = new StringBuilder();
-            csvContent.AppendLine("ProductName,Latitude,Longitude,Date");
-
-            foreach (ReportData reportDataItem in reportData)
+            //Generate Excel file, grouping product by lat and long
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
             {
-                Product product = reportDataItem.Product;
-                string productName = product.Name;
-                string latitude = product.Latitude.ToString();
-                string longitude = product.Longitude.ToString();
+                var groupedReportData = reportData.GroupBy(r => new { r.Product.Latitude, r.Product.Longitude });
 
-                emailBody.AppendLine($"Product: {productName}, Latitude: {latitude}, Longitude: {longitude}");
-
-                IList<ElectricProduction> electricProductions = reportDataItem.ElectricProductions;
-                foreach (ElectricProduction electricProduction in electricProductions)
+                foreach (var group in groupedReportData)
                 {
-                    double epValue = electricProduction.EP;
-                    DateTime dateValue = electricProduction.Date;
+                    var ws = package.Workbook.Worksheets.Add($"Lat {group.Key.Latitude} Long {group.Key.Longitude}");
 
-                    emailBody.AppendLine($"Electric Production: {epValue}, Date: {dateValue}");
-                    // add data to CSV
-                    csvContent.AppendLine($"{productName},{latitude},{longitude},{dateValue.ToString(CultureInfo.InvariantCulture)}");
+                    ws.Cells["A1"].Value = "ProductName";
+                    ws.Cells["B1"].Value = "Latitude";
+                    ws.Cells["C1"].Value = "Longitude";
+                    ws.Cells["D1"].Value = "Date";
+                    ws.Cells["E1"].Value = "Electric Production";
+
+                    int rowNumber = 2;
+                    foreach (var reportDataItem in group)
+                    {
+                        Product product = reportDataItem.Product;
+                        string productName = product.Name;
+                        string latitude = product.Latitude.ToString(CultureInfo.InvariantCulture);
+                        string longitude = product.Longitude.ToString(CultureInfo.InvariantCulture);
+
+                        emailBody.AppendLine();
+                        emailBody.AppendLine($"Product: {productName}, Latitude: {latitude}, Longitude: {longitude}");
+
+                        IList<ElectricProduction> electricProductions = reportDataItem.ElectricProductions;
+                        foreach (ElectricProduction electricProduction in electricProductions)
+                        {
+                            double epValue = electricProduction.EP;
+                            DateTime dateValue = electricProduction.Date;
+
+                            ws.Cells[rowNumber, 1].Value = productName;
+                            ws.Cells[rowNumber, 2].Value = latitude;
+                            ws.Cells[rowNumber, 3].Value = longitude;
+                            ws.Cells[rowNumber, 4].Value = dateValue.ToString(CultureInfo.InvariantCulture);
+                            ws.Cells[rowNumber, 5].Value = epValue;
+
+                            rowNumber++;
+                        }
+                    }
                 }
+
+                fileName = "EPreport.xlsx";
+                package.SaveAs(new FileInfo(fileName));
             }
 
-            // Write CSV data to a file
-            string fileName = "report.csv";
-            File.WriteAllText(fileName, csvContent.ToString());
-
+            //Send Email with xlsx attched
             MailMessage mail = new MailMessage();
-            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com"); // You can use SMTP servers like smtp.gmail.com
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
             mail.From = new MailAddress("dbw.project.2023@gmail.com");
-            mail.To.Add(email1);
+            mail.To.Add(email);
             mail.Subject = $"Report for Project {projectName}";
             mail.Body = emailBody.ToString();
 
-            // Attach CSV file
             Attachment attachment = new Attachment(fileName);
             mail.Attachments.Add(attachment);
 
-            // Use this if your SMTP server requires credentials
-            SmtpServer.Port = 587; // Change if necessary
+            //SMTP server credentials verify
+            SmtpServer.Port = 587;
             SmtpServer.Credentials = new System.Net.NetworkCredential("dbw.project.2023@gmail.com", "rtugmlllaixpnlcj");
-            SmtpServer.EnableSsl = true; // Some servers require this
+            SmtpServer.EnableSsl = true;
 
             try
             {
@@ -85,7 +106,6 @@ namespace PhotovoltaicSystemCalculation.Services
             }
             catch (Exception ex)
             {
-                // Handle the exception here
                 Console.WriteLine(ex.Message);
                 return false;
             }
