@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
+using System.Text.Json;
 
 namespace PhotovoltaicSystemCalculation.ExternalAPI
 {
@@ -69,7 +70,7 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                             // Create a WeatherDTO object
                             WeatherDTO weatherDTO = new WeatherDTO()
                             {
-                                DateTime = dateTime,
+                                Date = dateTime,
                                 Temperature = temperatureValueC,
                                 CloudCover = cloudsValue
                             };
@@ -90,15 +91,15 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             }
 
             // Calculating the average temperature
-            float averageTemperature = resultData.Average(r => r.Temperature);
+            double averageTemperature = resultData.Average(r => r.Temperature);
             // Calculating the average clouds value
-            float averageClouds = resultData.Average(r => r.CloudCover);
-            DateTime realDate = resultData[0].DateTime;
+            double averageClouds = resultData.Average(r => r.CloudCover);
+            DateTime realDate = resultData[0].Date;
 
             // Create a WeatherDTO object
             WeatherDTO avgWeatherDTO = new WeatherDTO()
             {
-                DateTime = realDate,
+                Date = realDate,
                 Temperature = averageTemperature,
                 CloudCover = averageClouds
             };
@@ -109,48 +110,36 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
         {
             // Call OpenWeather API to get Cloud and Tempurature data from Daily API
             var resultData = new List<WeatherDTO>();
+            double tempDayCelsius=0;
+            double cloudsClover =0;
+            DateTime dt = new DateTime();
 
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync("https://history.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=1&appid=cf5ead8af14c2db62245cc31d7fcf794");
+                    HttpResponseMessage response = await client.GetAsync("https://api.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=1&appid=cf5ead8af14c2db62245cc31d7fcf794");
 
                     if (response.IsSuccessStatusCode)
                     {
                         string responseBody = await response.Content.ReadAsStringAsync();
 
                         // Parse the response body into a JSON object
-                        JObject json = JObject.Parse(responseBody);
-                        JArray weatherDataArray = (JArray)json["list"];
-                        foreach (JObject weatherData in weatherDataArray)
-                        {
-                            // Extract "dt" value (timestamp) and convert to DateTime
-                            long unixTimestamp = weatherData.Value<long>("dt");
-                            DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime.Date;
+                        JsonDocument doc = JsonDocument.Parse(responseBody);
 
-                            // Extract "temp" value
-                            JObject temperatureObject = (JObject)weatherData["main"];
-                            float temperatureValueK = temperatureObject.Value<float>("temp");
+                        JsonElement root = doc.RootElement;
+                        JsonElement list = root.GetProperty("list");
+                        JsonElement firstItem = list[0];
 
-                            // Convert temperature Kelvin to Celsius
-                            float temperatureValueC = temperatureValueK - 273.15f;
+                        long dtUnix = firstItem.GetProperty("dt").GetInt64();
+                        dt = DateTimeOffset.FromUnixTimeSeconds(dtUnix).DateTime.Date;
 
-                            // Extract "clouds" value
-                            JObject cloudsObject = (JObject)weatherData["clouds"];
-                            float cloudsValue = cloudsObject.Value<int>("all") / 100f;
+                        double tempDayK = firstItem.GetProperty("temp").GetProperty("day").GetDouble();
+                        // Convert temperature Kelvin to Celsius
+                        tempDayCelsius = tempDayK - 273.15;
 
-                            // Create a WeatherDTO object
-                            WeatherDTO weatherDTO = new WeatherDTO()
-                            {
-                                DateTime = dateTime,
-                                Temperature = temperatureValueC,
-                                CloudCover = cloudsValue
-                            };
-
-                            // Add the WeatherDTO object to the result list
-                            resultData.Add(weatherDTO);
-                        }
+                        double clouds = firstItem.GetProperty("clouds").GetInt32();
+                        cloudsClover = clouds / 100;
                     }
                     else
                     {
@@ -163,17 +152,13 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                 }
             }
 
-
-
-
-            // mock
             return new WeatherDTO()
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                DateTime = DateTime.Today,
-                Temperature = 1f,
-                CloudCover = 1f
+                Date = dt,
+                Temperature = tempDayCelsius,
+                CloudCover = cloudsClover
             };
         }
     }

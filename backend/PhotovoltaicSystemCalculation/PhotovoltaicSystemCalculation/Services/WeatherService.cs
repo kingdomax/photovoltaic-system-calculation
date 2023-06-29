@@ -34,7 +34,6 @@ namespace PhotovoltaicSystemCalculation.Services
 
             // 3) Add List<WeatherDto> to Weather table in database
             bool status = await _weatherRepository.AddWeathers(allWeathers);
-
             return status;
         }
     }
