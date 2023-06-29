@@ -27,9 +27,9 @@ namespace PhotovoltaicSystemCalculation.Controllers
         }
 
         [HttpPost("SendReport")]
-        public async Task<IActionResult> SendReport(IList<ReportData> reportData, string recipientEmail)
+        public async Task<IActionResult> SendReport(IList<ReportData> reportData, int userId)
         {
-            var result = await _emailService.SendReport(reportData, recipientEmail);
+            var result = await _emailService.SendReport(reportData, userId);
             return Ok(result);
         }
 
