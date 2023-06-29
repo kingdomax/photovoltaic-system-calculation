@@ -1,7 +1,6 @@
 ﻿using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using PhotovoltaicSystemCalculation.Models;
 
 namespace PhotovoltaicSystemCalculation.Repositories
 {
@@ -9,6 +8,11 @@ namespace PhotovoltaicSystemCalculation.Repositories
     {
         private readonly SQLLiteContext _context;
         public ProductRepository(SQLLiteContext context) => _context = context;
+
+        public async Task<IList<ProductDTO>> GetAllProducts()
+        {
+            return await _context.Products.ToListAsync();
+        }
 
         public async Task<IList<ProductDTO>> GetProducts(int projectId)
         {

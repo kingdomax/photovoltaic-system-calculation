@@ -8,18 +8,36 @@ namespace PhotovoltaicSystemCalculation.Controllers
     [Route("[controller]")]
     public class TestController : ControllerBase
     {
+        private readonly IEmailService _emailService;
+        private readonly IWeatherService _weatherService;
         private readonly IPhotovoltaicService _photovoltaicService;
 
-        public TestController(IPhotovoltaicService photovoltaicService)
+        public TestController(IEmailService enailService, IPhotovoltaicService photovoltaicService, IWeatherService weatherService)
         {
+            _emailService = enailService;
+            _weatherService = weatherService;
             _photovoltaicService = photovoltaicService;
         }
 
-        [HttpPost("CaculateElectricProduction")]
-        public async Task<IActionResult> CaculateElectricProduction(ElectricProductionArgs args)
+        [HttpPost("CalculateElectricProduction")]
+        public async Task<IActionResult> CalculateElectricProduction(ElectricProductionArgs args)
         {
-            var testResult = await _photovoltaicService.CaculateElectricProduction(args);
-            return Ok(testResult); // todo: need to return correct status instead of omit error
+            var result = await _photovoltaicService.CaculateElectricProduction(args);
+            return Ok(result);
+        }
+
+        [HttpPost("SendReport")]
+        public async Task<IActionResult> SendReport(IList<ReportData> reportData, string recipientEmail)
+        {
+            var result = await _emailService.SendReport(reportData, recipientEmail);
+            return Ok(result);
+        }
+
+        [HttpPost("CronJob")]
+        public async Task<IActionResult> CronJob()
+        {
+            var result = await _weatherService.ScrapWeatherInfo();
+            return Ok(result);
         }
     }
 }

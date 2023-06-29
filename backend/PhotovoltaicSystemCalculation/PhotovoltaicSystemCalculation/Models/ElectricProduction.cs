@@ -2,7 +2,7 @@
 {
     public class ElectricProduction
     {
-        public double EP { get; set; }
+        public double EP { get; set; } // watt
         public DateTime Date { get; set; }
     }
 }
