@@ -7,6 +7,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
     {
         public DbSet<UserDTO> Users { get; set; }
         public DbSet<ProjectDTO> Projects { get; set; }
+        public DbSet<ProductDTO> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

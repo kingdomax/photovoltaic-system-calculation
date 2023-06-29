@@ -38,7 +38,7 @@ namespace PhotovoltaicSystemCalculation.Services
             {
                 var projectDto = new ProjectDTO
                 {
-                    Name = request.ProjectName,
+                    Name = request.Name,
                     CreatedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),
                     Status = 1,
                     OwnerId = userId
@@ -64,7 +64,7 @@ namespace PhotovoltaicSystemCalculation.Services
             try
             {
                 var result = await _projectRepository.DeleteProject(userId, request.ProjectId);
-                return result ? await GetProjects(userId) : null;
+                return await GetProjects(userId);
             }
             catch (Exception ex)
             {

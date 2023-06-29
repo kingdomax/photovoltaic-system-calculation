@@ -14,7 +14,7 @@ export function init() {
     document.getElementById('confirmDeleteProject').addEventListener('click', (event) => { // bind delete button project (in modal)
         console.log('confirmDeleteProject()');
         fetchData('/Project/DeleteProject', { ProjectId: getState().targetDeleteProject }, renderProjectList);
-        updateState({ targetDeleteProject: -1, currentProject: -1 });
+        updateState({ targetDeleteProject: -1, currentProject: null });
     });
 }
 
@@ -44,7 +44,7 @@ export function renderProjectList(projectList) {
                                 <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="${color}"/><text x="50%" y="50%" fill="${color}" dy=".3em">32x32</text></svg>
                                 <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
                                 <div class="d-flex justify-content-between">
-                                    <strong class="text-gray-dark mr-auto">${project.name}</strong>
+                                    <strong class="project-name text-gray-dark mr-auto">${project.name}</strong>
                                     <a class="edit-view-link" href="javascript:void(0)">${actionText}</a>
                                     <div class="vr mx-2 opacity-50"></div>
                                     <a class="delete-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteProjectModal">delete</a>
@@ -98,7 +98,8 @@ function handleToggleProject() {
 function handleEditViewButton(event) {
     const projectItem = event.target.closest('.text-body-secondary');
     const projectId = parseInt(projectItem.dataset.id, 10);
-    updateState({ currentProject: projectId }, false);
+    const projectName = projectItem.querySelector('.project-name').textContent;
+    updateState({ currentProject: { id: projectId, name: projectName } }, false);
     navbarChange('project');
 }
   
@@ -110,8 +111,8 @@ function handleDeleteButton(event) {
 
 export function createProject() {
     const goToProjectPage = (project) => {
-        updateState({ currentProject: project.projectId }, false);
+        updateState({ currentProject: { id: project.projectId, name: project.projectName } }, false);
         navbarChange('project');
     };
-    fetchData('/Project/CreateProject', { ProjectName: document.getElementById('createProjectName').value }, goToProjectPage);
+    fetchData('/Project/CreateProject', { Name: document.getElementById('createProjectName').value }, goToProjectPage);
 }

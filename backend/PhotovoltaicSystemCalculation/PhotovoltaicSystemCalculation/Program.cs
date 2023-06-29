@@ -15,8 +15,10 @@ builder.Services.AddDbContext<SQLLiteContext>();
 builder.Services.AddScoped<ISolarAPI, SolarAPI>();
 builder.Services.AddScoped<IWeatherForecastAPI, WeatherForecastAPI>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 

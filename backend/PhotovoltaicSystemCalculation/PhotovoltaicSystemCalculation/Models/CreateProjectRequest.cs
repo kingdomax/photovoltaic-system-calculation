@@ -2,6 +2,6 @@
 {
     public class CreateProjectRequest
     {
-        public string ProjectName { get; set; }
+        public string Name { get; set; }
     }
 }

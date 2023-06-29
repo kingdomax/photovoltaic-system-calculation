@@ -14,7 +14,7 @@ export function initLandingPage() {
     projectPage.init();
 }
 
-let state = { currentPage: 'profile', currentProject: -1, targetDeleteProject: -1 }; // central state of page
+let state = { currentPage: 'profile', currentProject: null, targetDeleteProject: -1 }; // central state of page
 export function getState() { return JSON.parse(JSON.stringify(state)); }
 export function updateState(newState, enableReRender = true) { 
     state = { ...state, ...newState };
@@ -27,8 +27,8 @@ function sideEffect() {
     switch (state.currentPage){
         case 'projectList':     fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
                                 break;
-        //case 'project':       fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
-        //                      break;
+        case 'project':         projectPage.renderProjectPage();
+                                break;
     }
 }
 function reRender() {
