@@ -1,14 +1,13 @@
-﻿using PhotovoltaicSystemCalculation.Repositories.Models;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.ExternalAPI
 {
     public class WeatherForecastAPI : IWeatherForecastAPI
     {
-        public async Task<IList<WeatherDTO>> GetWeatherForecast(float latitude, float longitude, long startDate)
+        public async Task<IList<WeatherDTO>> Get30DaysWeatherForecast(float latitude, float longitude, long startDate)
         {
-            // TODO: This method will be receive list of weather data from API 
             var returnData = new List<WeatherDTO>();
 
             // Get data past 30 days
@@ -30,10 +29,9 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             }
 
             return returnData;
-
         }
 
-        public async Task<WeatherDTO> GetAverageWeatherForecastPerDay(float latitude, float longitude, long date)
+        private async Task<WeatherDTO> GetAverageWeatherForecastPerDay(float latitude, float longitude, long date)
         {
             // Call OpenWeather API to get Clound and Tempurature data
             var resultData = new List<WeatherDTO>();
@@ -105,6 +103,20 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                 CloudCover = averageClouds
             };
             return avgWeatherDTO;
+        }
+
+        public async Task<WeatherDTO> GetDialyWeatherForCronjob(float latitude, float longitude)
+        {
+            // TODO: call api to get Temperature & CloudCover
+
+            return new WeatherDTO()
+            {
+                Latitude = latitude,
+                Longitude = longitude,
+                DateTime = DateTime.Today,
+                Temperature = 1f,
+                CloudCover = 1f
+            };
         }
     }
 }

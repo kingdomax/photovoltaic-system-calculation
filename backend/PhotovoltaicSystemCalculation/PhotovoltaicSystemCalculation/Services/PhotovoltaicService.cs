@@ -16,10 +16,9 @@ namespace PhotovoltaicSystemCalculation.Services
         {
             _solarAPI = solarAPI;
             _weatherForecastAPI = weatherForecastAPI;
-            // Peak Sunlight Hours (Average in Germany)
-            _sunlightHours = new Dictionary<int, int>()
+            _sunlightHours = new Dictionary<int, int>() // Peak Sunlight Hours (Average in Germany)
             {
-                { 1, 3 },
+                { 1, 3 }, // key=month
                 { 2, 4 },
                 { 3, 5 },
                 { 4, 6 },
@@ -36,13 +35,12 @@ namespace PhotovoltaicSystemCalculation.Services
 
         public async Task<IList<ElectricProduction>> CaculateElectricProduction(ElectricProductionArgs args)
         {
-            var sunInfo = await _solarAPI.FetchSolarInformation(args.Latitude, args.Longitude, args.Inclination, args.Orientation); // call solar API to get sun information for the entire year
-            var weatherInfo = await _weatherForecastAPI.GetWeatherForecast(args.Latitude, args.Longitude, args.StartDate); // call weather API to get weather for specific date
-
-            return CaculateElectricProductionPerDay(args, sunInfo, weatherInfo);
+            var sunInfo = await _solarAPI.FetchSolarInformation(args.Latitude, args.Longitude, args.Inclination, args.Orientation);
+            var weatherInfo = await _weatherForecastAPI.Get30DaysWeatherForecast(args.Latitude, args.Longitude, args.StartDate);
+            return CalculateElectricProductionPerProduct(args, sunInfo, weatherInfo);
         }
 
-        private IList<ElectricProduction> CaculateElectricProductionPerDay(ElectricProductionArgs args, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
+        private IList<ElectricProduction> CalculateElectricProductionPerProduct(ElectricProductionArgs args, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
         {
             var electricResults = new List<ElectricProduction>();
             
