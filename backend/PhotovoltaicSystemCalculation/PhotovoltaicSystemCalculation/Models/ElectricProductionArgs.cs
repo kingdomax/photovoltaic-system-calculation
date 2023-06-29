@@ -14,5 +14,7 @@
         //parameters use for Electric Production
         public float Efficiency { get; set; }
         public float PeakPower { get; set; }
+
+        public float Area { get; set; }
     }
 }
