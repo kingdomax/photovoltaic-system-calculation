@@ -11,14 +11,16 @@ export function init() {
 export function renderProjectPage() {
     const project = getState().currentProject;
     if (!project) {
-        document.querySelector('.project-page > .album').style.display = 'none';
-        document.querySelector('.project-page > .text-center').style.display = 'none';
+        document.querySelector('.project-page > .text-center').style.display = 'none'; // header
+        document.querySelector('.project-page > .album').style.display = 'none'; // body
+        document.querySelector('.project-page > .report-container').style.display = 'none'; // report
         return;
     }
 
     renderHeader(project);
     fetchData('/Product/GetProducts', { ProjectId: project.id }, renderProductItemsAndMap);
     // render report only when project is read-only mode
+    renderReport();
     // if (!project.status) { fetchData('/Photovoltaic/GetReportData', { ProjectId: project.id }, renderReport); }
 }
 
@@ -30,8 +32,11 @@ function renderHeader(project) {
     // Set project name
     header.querySelector('.fw-light').textContent = `${project.name}${!project.status ? " (read-only)" : ""}`;
 
-    // Bind add product modal button
+    // Attaching event listener to add product button
     header.querySelector('#addProduct').style.display = project.status ? 'inline-block' : 'none';
+    replaceEventListener(header.querySelector('#addProduct'), 'click', handleAddProductButton);
+
+    // Attaching event listener to add product form
     replaceEventListener(document.querySelector('#addProductForm'), 'submit', handleAddProductForm);
     document.querySelectorAll('input[name="pscProduct"]').forEach((radioButton) => {
         replaceEventListener(radioButton, 'change', handleRadioChange);
@@ -45,6 +50,10 @@ function renderHeader(project) {
 
     // Attaching event listener to delete product modal
     replaceEventListener(document.querySelector('#confirmDeleteProduct'), 'click', handleConfirmDeleteModal);
+}
+
+function renderReport(reportData) {
+    document.querySelector('.project-page > .report-container').style.display = 'block';
 }
 
 function renderProductItemsAndMap(products) {
@@ -65,6 +74,7 @@ function renderProductItemsAndMap(products) {
                         <text class="prod-item-name" x="20%" y="50%" fill="#eceeef" dy=".3em">${product.name}</text>
                     </svg>
                     <div class="card-body">
+                        <p class="prod-item-id card-text">ID : ${product.id}</p>
                         <p class="prod-item-pp card-text">Pmax : ${product.powerpeak} kW</p>
                         <p class="prod-item-area card-text">Area : ${product.area} m²</p>
                         <p class="prod-item-orientation card-text">Orientation : ${product.orientation}°</p>
@@ -72,7 +82,7 @@ function renderProductItemsAndMap(products) {
                         <p class="prod-item-location card-text">Location : ${product.latitude}, ${product.longitude}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <button type="button" class="${editable} edit-product btn btn-sm btn-outline-secondary">Edit</button>
+                                <button type="button" class="${editable} edit-product btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#createProductModal">Edit</button>
                                 <button type="button" class="${editable} delete-product btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteProductModal">Delete</button>
                             </div>
                         </div>
@@ -97,21 +107,8 @@ function renderProductItemsAndMap(products) {
     renderMap(products);
 }
 
-function handleEditButton(event) {
-    const productItem = event.target.closest('.product-item');
+function handleAddProductButton(event) {
 
-    const productId = parseInt(productItem.dataset.id, 10);
-    const productName = productItem.querySelector('.prod-item-name').textContent;
-    const productPmax = parseFloat(productItem.querySelector('.prod-item-pp').textContent.split(': ')[1].trim().replace(' kW', ''));
-    const productArea = parseFloat(productItem.querySelector('.prod-item-area').textContent.split(': ')[1].trim().replace(' m²', ''));
-    const productOrientation = parseFloat(productItem.querySelector('.prod-item-orientation').textContent.split(': ')[1].trim().replace('°', ''));
-    const productInclination = parseFloat(productItem.querySelector('.prod-item-inclination').textContent.split(': ')[1].trim().replace('°', ''));
-    const productLocation = productItem.querySelector('.prod-item-location').textContent.split(': ')[1].trim().split(',').map(coord => parseFloat(coord));
-}
-
-function handleDeleteButton(event) {
-    const productItem = event.target.closest('.product-item');
-    updateState({ currentProduct: { id: parseInt(productItem.dataset.id, 10) } });
 }
 
 function handleRadioChange(event) {
@@ -157,6 +154,25 @@ function handleAddProductForm(event) {
     fetchData('/Product/AddProduct', newProduct, renderProductItemsAndMap);
 }
 
+function handleEditButton(event) {
+    const productItem = event.target.closest('.product-item');
+
+    const productId = parseInt(productItem.dataset.id, 10);
+    const productName = productItem.querySelector('.prod-item-name').textContent;
+    const productPmax = parseFloat(productItem.querySelector('.prod-item-pp').textContent.split(': ')[1].trim().replace(' kW', ''));
+    const productArea = parseFloat(productItem.querySelector('.prod-item-area').textContent.split(': ')[1].trim().replace(' m²', ''));
+    const productOrientation = parseFloat(productItem.querySelector('.prod-item-orientation').textContent.split(': ')[1].trim().replace('°', ''));
+    const productInclination = parseFloat(productItem.querySelector('.prod-item-inclination').textContent.split(': ')[1].trim().replace('°', ''));
+    const productLocation = productItem.querySelector('.prod-item-location').textContent.split(': ')[1].trim().split(',').map(coord => parseFloat(coord));
+
+    // change header of modal
+}
+
+function handleDeleteButton(event) {
+    const productItem = event.target.closest('.product-item');
+    updateState({ currentProduct: { id: parseInt(productItem.dataset.id, 10) } });
+}
+
 function handleConfirmDeleteModal(event) {
     const deleteProductRequest = {
         ProductId: getState().currentProduct.id,
@@ -168,8 +184,4 @@ function handleConfirmDeleteModal(event) {
 
 function renderMap(products) {
     console.log('re-render pins on map');
-}
-
-function renderReport(reportData) {
-    console.log('renderReport(reportData)');
 }
