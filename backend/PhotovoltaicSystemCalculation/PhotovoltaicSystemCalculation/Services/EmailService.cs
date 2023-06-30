@@ -11,25 +11,20 @@ namespace PhotovoltaicSystemCalculation.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IProjectRepository _projectRepository;
         private readonly IUserAccountRepository _userAccountRepository;
 
-        public EmailService(IProjectRepository projectRepository, IUserAccountRepository userAccountRepository) 
+        public EmailService(IUserAccountRepository userAccountRepository) 
         {
-            _projectRepository = projectRepository;
             _userAccountRepository = userAccountRepository;
         }
 
-        public async Task<bool> SendReport(IList<ReportData> reportData, int userId)
+        public async Task<bool> SendReport(IList<ReportData> reportData, int userId, string projectName)
         {
             string fileName;
 
             //Get recipient Email and project name
             UserDTO user = await _userAccountRepository.GetUser(userId);
             string email = user.Email;
-
-            ProjectDTO project = await _projectRepository.GetProject(reportData[0].Product.ProjectId);
-            string projectName = project.Name;
 
             StringBuilder emailBody = new StringBuilder();
             emailBody.AppendLine($"Report 30 Days Electric Produce of All products of the Project: {projectName}");
@@ -100,24 +95,22 @@ namespace PhotovoltaicSystemCalculation.Services
             SmtpServer.Credentials = new System.Net.NetworkCredential("dbw.project.2023@gmail.com", "rtugmlllaixpnlcj");
             SmtpServer.EnableSsl = true;
 
+            bool isSuccess = false;
             try
             {
                 await SmtpServer.SendMailAsync(mail);
-                return true;
+                isSuccess = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
             }
             finally
             {
                 // Delete the file after sending the email
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
+                //if (File.Exists(fileName)) { File.Delete(fileName); }
             }
+            return isSuccess;
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using PhotovoltaicSystemCalculation.Models;
+using PhotovoltaicSystemCalculation.Helpers;
 using PhotovoltaicSystemCalculation.ExternalAPI.Models;
 using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
+using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.Services
 {
@@ -11,11 +13,28 @@ namespace PhotovoltaicSystemCalculation.Services
         private readonly ISolarAPI _solarAPI;
         private readonly IWeatherForecastAPI _weatherForecastAPI;
         private readonly IDictionary<int, int> _sunlightHours;
+        private readonly IProductService _productService;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IEmailService _emailService;
+        private readonly IEPReportService _epReportService;
+        private readonly IProjectService _projectService;
 
-        public PhotovoltaicService(ISolarAPI solarAPI, IWeatherForecastAPI weatherForecastAPI)
+        public PhotovoltaicService(
+            ISolarAPI solarAPI,
+            IWeatherForecastAPI weatherForecastAPI,
+            IProductService productService,
+            IProjectRepository projectRepository,
+            IEmailService emailService,
+            IEPReportService epReportService,
+            IProjectService projectService)
         {
             _solarAPI = solarAPI;
             _weatherForecastAPI = weatherForecastAPI;
+            _productService = productService;
+            _projectRepository = projectRepository;
+            _emailService = emailService;
+            _epReportService = epReportService;
+            _projectService = projectService;
             _sunlightHours = new Dictionary<int, int>() // Peak Sunlight Hours (Average in Germany)
             {
                 { 1, 3 }, // key=month
@@ -33,14 +52,14 @@ namespace PhotovoltaicSystemCalculation.Services
             };
         }
 
-        public async Task<IList<ElectricProduction>> CaculateElectricProduction(ElectricProductionArgs args)
+        public async Task<IList<ElectricProduction>> CalculateElectricProductionPerProduct(Product product, long startDate)
         {
-            var sunInfo = await _solarAPI.FetchSolarInformation(args.Latitude, args.Longitude, args.Inclination, args.Orientation);
-            var weatherInfo = await _weatherForecastAPI.Get30DaysWeatherForecast(args.Latitude, args.Longitude, args.StartDate);
-            return CalculateElectricProductionPerProduct(args, sunInfo, weatherInfo);
+            var sunInfo = await _solarAPI.FetchSolarInformation(product.Latitude, product.Longitude, product.Inclination, product.Orientation);
+            var weatherInfo = await _weatherForecastAPI.Get30DaysWeatherForecast(product.Latitude, product.Longitude, startDate);
+            return Calculate(product, sunInfo, weatherInfo);
         }
 
-        private IList<ElectricProduction> CalculateElectricProductionPerProduct(ElectricProductionArgs args, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
+        private IList<ElectricProduction> Calculate(Product product, SolarDTO sunInfo, IList<WeatherDTO> weatherList)
         {
             var electricResults = new List<ElectricProduction>();
             
@@ -51,10 +70,10 @@ namespace PhotovoltaicSystemCalculation.Services
                 float sunIrridance = sunInfo.Irradiance[month];
 
                 //Calculate adjustedIrradiance [Adjusted Irradiance (kW/m²) = Solar Irradiance * Efficiency * (1 - Cloud Cover) * Area of solar cell]
-                double adjustedIrradiance = sunIrridance * args.Efficiency * (1 - weather.CloudCover) * args.Area;
+                double adjustedIrradiance = sunIrridance * product.Efficiency * (1 - weather.CloudCover) * product.Area;
 
                 //Calculate adjustedPeakPower [Adjusted Peak Power (kW) = Peak Power (kW) * (1 - Temp Coeff * (Temp - 25))]
-                double adjustedPeakPower = args.PeakPower * (1 - 0.005 * (weather.Temperature - 25));
+                double adjustedPeakPower = product.Powerpeak * (1 - 0.005 * (weather.Temperature - 25));
 
                 //Calculate Electricity Production per day
                 int sunlightHours = _sunlightHours[month];
@@ -70,6 +89,79 @@ namespace PhotovoltaicSystemCalculation.Services
                 });
             }
             return electricResults;
+        }
+
+        public async Task<bool> GenerateElectricityReport(int projectId, int userId)
+        {
+            // 0. Prepare all product and project information
+            var project = new ProjectDTO();
+            IList<Product> allProduct = new List<Product>();
+            try
+            {
+                project = await _projectRepository.GetProject(projectId);
+                allProduct = await _productService.GetProducts(projectId);
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while retreiving project and product from database"); }
+
+            // 1. Calculate electricity for all products inside this project
+            var startDate = DateTimeHelper.ConvertToUnix(project.CreatedAt);
+            var reportData = new List<ReportData>();
+            try
+            {
+                foreach (var product in allProduct) 
+                {
+                    var electricProduction = await CalculateElectricProductionPerProduct(product, startDate);
+                    reportData.Add(new ReportData
+                    {
+                        Product = product,
+                        ElectricProductions = electricProduction
+                    });
+                }
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while calculate electricity for all product"); }
+
+            // 2. Store in database
+            bool isStoreReportDataInDB = false;
+            try
+            {
+                isStoreReportDataInDB = await _epReportService.StoreReportData(reportData);
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while calculate electricity for all product"); }
+
+            // 3. Send mail
+            bool isSendMailSuccess = false;
+            try
+            {
+                isSendMailSuccess = await _emailService.SendReport(reportData, userId, project.Name);
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while sending report data to user email"); }
+
+            // 4. Mark flag in project.status
+            bool isSetProjectToReadOnly = false;
+            try
+            {
+                isSetProjectToReadOnly = await _projectService.MarkProjectAsReadOnly(projectId);
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while marking project as read-only"); }
+
+            Console.WriteLine($"[GenerateElectricityReport()] projectId: {projectId}, userId: {userId}isStoreReportDataInDB: {isStoreReportDataInDB}, isSendMailSuccess: {isSendMailSuccess}, isSetProjectToReadOnly: {isSetProjectToReadOnly}");
+            return isStoreReportDataInDB && isSendMailSuccess && isSetProjectToReadOnly;
+        }
+
+        public async Task AutomaticGenerateElectricityReport()
+        {
+            // check projec.status and projec.date > 30
+            var oldProjects = await _projectService.GetOldProjects();
+
+            foreach (var project in oldProjects)
+            {
+                await GenerateElectricityReport(project.Id, project.OwnerId);
+            }
+        }
+
+        public async Task<IList<ReportData>> GetElectricityReport(int projectId)
+        {
+            return null;    
         }
     }
 }

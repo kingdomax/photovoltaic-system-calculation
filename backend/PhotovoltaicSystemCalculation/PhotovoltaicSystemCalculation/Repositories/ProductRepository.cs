@@ -30,6 +30,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
             var existingProduct = await _context.Products.FindAsync(productDTO.Id);
             if (existingProduct != null)
             {
+                // update entire object
                 _context.Entry(existingProduct).CurrentValues.SetValues(productDTO);
                 await _context.SaveChangesAsync();
             }

@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using Newtonsoft.Json.Linq;
 using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
-using System.Text.Json;
-using PhotovoltaicSystemCalculation.Services;
 
 namespace PhotovoltaicSystemCalculation.ExternalAPI
 {

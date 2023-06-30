@@ -19,24 +19,24 @@ namespace PhotovoltaicSystemCalculation.Controllers
             _photovoltaicService = photovoltaicService;
         }
 
-        [HttpPost("CalculateElectricProduction")]
-        public async Task<IActionResult> CalculateElectricProduction(ElectricProductionArgs args)
+        [HttpPost("ScrapWeatherInfo")]
+        public async Task<IActionResult> ScrapWeatherInfo()
         {
-            var result = await _photovoltaicService.CaculateElectricProduction(args);
+            var result = await _weatherService.ScrapWeatherInfo();
+            return Ok(result);
+        }
+
+        [HttpPost("CalculateElectricProduction")]
+        public async Task<IActionResult> CalculateElectricProduction(Product product, long startDate)
+        {
+            var result = await _photovoltaicService.CalculateElectricProductionPerProduct(product, startDate);
             return Ok(result);
         }
 
         [HttpPost("SendReport")]
-        public async Task<IActionResult> SendReport(IList<ReportData> reportData, int userId)
+        public async Task<IActionResult> SendReport(IList<ReportData> reportData, int userId, string projectName)
         {
-            var result = await _emailService.SendReport(reportData, userId);
-            return Ok(result);
-        }
-
-        [HttpPost("CronJob")]
-        public async Task<IActionResult> CronJob()
-        {
-            var result = await _weatherService.ScrapWeatherInfo();
+            var result = await _emailService.SendReport(reportData, userId, projectName);
             return Ok(result);
         }
     }

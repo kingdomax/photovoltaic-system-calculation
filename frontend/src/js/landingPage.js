@@ -19,11 +19,11 @@ export function getState() { return JSON.parse(JSON.stringify(window.state)); }
 export function updateState(newState, enableReRender = false) { 
     window.state = { ...window.state, ...newState };
     if (enableReRender) {
-        sideEffect();
         reRender();
+        sideEffect();
     }
 }
-function sideEffect() {
+function reRender() {
     switch (window.state.currentPage){
         case 'projectList':     fetchData('/Project/GetProjectList', null, projectListPage.renderProjectList);
                                 break;
@@ -31,7 +31,7 @@ function sideEffect() {
                                 break;
     }
 }
-function reRender() {
+function sideEffect() {
     document.querySelector('.profile-page').style.display = 'none';
     document.querySelector('.project-list-page').style.display = 'none';
     document.querySelector('.project-page').style.display = 'none';

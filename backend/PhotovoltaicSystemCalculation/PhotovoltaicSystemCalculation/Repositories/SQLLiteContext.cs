@@ -9,6 +9,7 @@ namespace PhotovoltaicSystemCalculation.Repositories
         public DbSet<ProjectDTO> Projects { get; set; }
         public DbSet<ProductDTO> Products { get; set; }
         public DbSet<WeatherDTO> Weathers { get; set; }
+        public DbSet<EPReportDTO> ElectricProducedReport { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -180,9 +180,9 @@
             <div class="col-md-5 map bg-secondary"></div>
           </div>
           <!-- Project Report -->
-          <div class="report-container">
-            <div class="pt-4 pb-2 mb-3 border-top">
-              <h1 class="fw-light text-center">Electricity produced over the last 30 days</h1>
+          <div class="report-container pb-4">
+            <div class="pt-4 mb-3 border-top">
+              <h1 class="fw-light text-center">Electricity produced over 30 days</h1>
             </div>
             <svg id="electricReport" class="my-4 w-100" width="1000" height="500"></svg>
           </div>
@@ -312,6 +312,30 @@
           <div class="modal-footer flex-nowrap p-0">
             <button id="confirmDeleteProduct" type="button" class="btn btn-lg btn-link link-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" data-bs-dismiss="modal"><strong>Delete</strong></button>
             <button type="button" class="btn btn-lg btn-link link-dark fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="genReportModal" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-body p-4 text-center">
+            <h5 class="mb-3 text-primary">Finalize and Generate Report</h5>
+            <p class="mb-0">Please note that once the report is generated:</p>
+            <p class="mb-0">1. The project will be set to <b>READ ONLY</b>.</p>
+            <p class="mb-0">2. You will not be able to add new products or edit existing products in this project.</p>
+          </div>
+          <div class="modal-footer flex-nowrap p-0">
+            <button id="confirmGenReport" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end">
+              <strong class="proceed">Proceed</strong>
+              <strong class="loading" style="display: none;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="sr-only">Generating...</span>
+              </strong>
+            </button>
+            <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>

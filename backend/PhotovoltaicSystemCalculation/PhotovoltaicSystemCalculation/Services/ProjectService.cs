@@ -49,6 +49,7 @@ namespace PhotovoltaicSystemCalculation.Services
                 return new Project
                 {
                     Id = newProjectDto.Id,
+                    OwnerId = userId,
                     Name = newProjectDto.Name,
                     CreatedAt = DateTime.Parse(newProjectDto.CreatedAt),
                     Status = newProjectDto.Status == 1
@@ -59,6 +60,7 @@ namespace PhotovoltaicSystemCalculation.Services
                 throw new Exception($"An error occurred while creating a new project: {ex.Message}");
             }
         }
+
         public async Task<IList<Project>> DeleteProject(int userId, DeleteProjectRequest request)
         {
             try
@@ -69,6 +71,38 @@ namespace PhotovoltaicSystemCalculation.Services
             catch (Exception ex)
             {
                 throw new Exception($"An error occurred while deleting a project: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> MarkProjectAsReadOnly(int projectId)
+        {
+            try
+            {
+                return await _projectRepository.EditProject(projectId, 0);
+            }
+            catch (Exception ex) { throw new Exception($"An error occurred while MarkProjectAsReadOnly(): {ex.Message}"); }
+        }
+
+        public async Task<IList<Project>> GetOldProjects()
+        {
+            try
+            {
+                var projectDTOs = await _projectRepository.GetAllProjects();
+                var projects = projectDTOs.Select(p => new Project
+                {
+                    Id = p.Id,
+                    OwnerId = p.OwnerId,
+                    Name = p.Name,
+                    CreatedAt = DateTime.Parse(p.CreatedAt),
+                    Status = p.Status == 1
+                }).ToList();
+
+                var currentDate = DateTime.Now;
+                return projects.Where(p => p.Status == true && (currentDate - p.CreatedAt).TotalDays >= 30).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving old projects: {ex.Message}");
             }
         }
     }

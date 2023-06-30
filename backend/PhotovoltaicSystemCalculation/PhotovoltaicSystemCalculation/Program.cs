@@ -1,11 +1,11 @@
+using Hangfire;
+using Hangfire.SQLite;
 using PhotovoltaicSystemCalculation.Services;
 using PhotovoltaicSystemCalculation.ExternalAPI;
 using PhotovoltaicSystemCalculation.Repositories;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
-using Hangfire;
-using Hangfire.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +19,13 @@ builder.Services.AddScoped<IWeatherForecastAPI, WeatherForecastAPI>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+builder.Services.AddScoped<IEPReportRepository, EPReportRepository>();
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IEPReportService, EPReportService>();
 builder.Services.AddScoped<IPhotovoltaicService, PhotovoltaicService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
@@ -52,12 +54,14 @@ var app = builder.Build();
 
 // Use Hangfire Dashboard
 app.UseHangfireDashboard();
-
 // trigger Cronjob at 00:00 UTC+1 every day
 using (var scope = app.Services.CreateScope())
 {
     var weatherService = scope.ServiceProvider.GetRequiredService<IWeatherService>();
     RecurringJob.AddOrUpdate(() => weatherService.ScrapWeatherInfo(), "0 22 * * *");
+
+    var pscService = scope.ServiceProvider.GetRequiredService<IPhotovoltaicService>();
+    RecurringJob.AddOrUpdate(() => pscService.AutomaticGenerateElectricityReport(), "6 21 * * *");
 }
 
 // Configure the HTTP request pipeline.

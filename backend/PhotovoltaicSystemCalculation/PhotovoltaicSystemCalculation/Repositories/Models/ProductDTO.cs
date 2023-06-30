@@ -11,7 +11,7 @@ namespace PhotovoltaicSystemCalculation.Repositories.Models
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public float Area { get; set; }
-        public float Inclination { get; set; }
+        public int Inclination { get; set; }
         public int Orientation { get; set; }
         public float Powerpeak { get; set; }
         public float Efficiency { get; set; }
