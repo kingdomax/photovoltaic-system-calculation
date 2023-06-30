@@ -1,4 +1,6 @@
-﻿namespace PhotovoltaicSystemCalculation.Repositories.Models
+﻿using PhotovoltaicSystemCalculation.Models;
+
+namespace PhotovoltaicSystemCalculation.Repositories.Models
 {
     public class ProductDTO
     {
@@ -13,5 +15,23 @@
         public int Orientation { get; set; }
         public float Powerpeak { get; set; }
         public float Efficiency { get; set; }
+
+        public Product ToProduct()
+        {
+            return new Product
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Brand = this.Brand,
+                Latitude = this.Latitude,
+                Longitude = this.Longitude,
+                Area = this.Area,
+                Inclination = this.Inclination,
+                Orientation = this.Orientation,
+                Powerpeak = this.Powerpeak,
+                Efficiency = this.Efficiency,
+                ProjectId = this.ProjectId
+            };
+        }
     }
 }

@@ -163,7 +163,7 @@
                 <h1 class="fw-light">Project Name</h1>
                 <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
                 <p>
-                  <a href="javascript:void(0)" class="btn btn-primary my-2">Add product</a>
+                  <a id="addProduct" href="javascript:void(0)" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#createProductModal">Add product</a>
                   <a id="generateReport" href="javascript:void(0)" class="btn btn-secondary my-2">Generate report</a>
                 </p>
               </div>
@@ -369,6 +369,77 @@
     </div>
 
     <!-- Create Product Modal -->
+    <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="createProductModal">
+      <div class="modal-dialog modal-create-product" role="document">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">Add Product</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-5 pt-0">
+            <form id="addProductForm">
+              <!-- Select Product -->
+              <hr class="mt-2 mb-4">
+              <h4 class="mb-3">Photovoltaic System</h4>
+              <div class="my-3">
+                <div class="form-check">
+                  <input id="qPeakDuo" name="pscProduct" type="radio" class="form-check-input" checked required>
+                  <label class="form-check-label" for="qPeakDuo">Q.Peak Duo ML-G11S Series</label>
+                </div>
+                <div class="form-check">
+                  <input id="firstSolar" name="pscProduct" type="radio" class="form-check-input" required>
+                  <label class="form-check-label" for="firstSolar">First Solar Series 6 Plus</label>
+                </div>
+                <div class="form-check">
+                  <input id="tigerNeo" name="pscProduct" type="radio" class="form-check-input" required>
+                  <label class="form-check-label" for="tigerNeo">Tiger Neo N-type 54HL4-V</label>
+                </div>
+              </div>
+              <small class="text-body-secondary prod-p-max">Pmax: 0.51 kW</small><br>
+              <small class="text-body-secondary prod-area">Area: 2.37 m²</small><br>
+              <small class="text-body-secondary prod-efficiency">Efficiency: 0.21</small>
+              
+              <!-- Select Configs -->
+              <hr class="my-4">
+              <h4 class="mb-3">Configurations</h4>
+              <div class="row gy-3">
+                <div class="col-md-6">
+                  <label for="orientation" class="form-label">Orientation</label>
+                  <select class="form-select" id="orientation" required>
+                    <option value="">Choose...</option>
+                    <option value="0">0°</option>
+                    <option value="90">90°</option>
+                    <option value="180">180°</option>
+                    <option value="-90">-90°</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="inclination" class="form-label">Inclination</label>
+                  <select class="form-select" id="inclination" required>
+                    <option value="">Choose...</option>
+                    <option value="30">30°</option>
+                    <option value="35">35°</option>
+                    <option value="40">40°</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="lat-number" class="form-label">Latitude</label>
+                  <input type="text" class="form-control" id="lat-number" placeholder="" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="lng-number" class="form-label">Longitude</label>
+                  <input type="text" class="form-control" id="lng-number" placeholder="" required>
+                </div>
+              </div>
+  
+              <!-- Confirm Button -->
+              <hr class="mt-5 mb-4">
+              <button class="w-100 btn btn-primary btn-lg mt-3" type="submit">Confirm</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Delete Product Modal -->
     <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="deleteProductModal">

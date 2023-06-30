@@ -3,6 +3,7 @@
 @import "profile-page";
 @import "project-list-page";
 @import "project-page";
+@import "modal-module";
 
 body {
     min-height: 100vh;
@@ -22,12 +23,4 @@ main {
 
 .main-content {
     height: 100vh;
-}
-
-.modal-sheet .modal-dialog {
-    width: 380px;
-    transition: bottom .75s ease-in-out;
-}
-.modal-sheet .modal-footer {
-    padding-bottom: 2rem;
 }

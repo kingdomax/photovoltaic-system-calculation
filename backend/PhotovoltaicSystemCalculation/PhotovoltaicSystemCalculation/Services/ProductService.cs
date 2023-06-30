@@ -16,18 +16,17 @@ namespace PhotovoltaicSystemCalculation.Services
         public async Task<IList<Product>> GetProducts(int projectId)
         {
             var productDTOs = await _productRepository.GetProducts(projectId);
-            return productDTOs.Select(p => new Product
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Latitude = p.Latitude,
-                Longitude = p.Latitude,
-                Area = p.Area,
-                Inclination = p.Inclination,
-                Orientation = p.Orientation,
-                Powerpeak = p.Powerpeak,
-                ProjectId = p.ProjectId,
-            }).ToList();
+            return productDTOs.Select(p => p.ToProduct()).ToList();
+        }
+
+        public async Task AddProduct(Product product)
+        {
+            await _productRepository.AddProduct(product.ToProductDTO());
+        }
+
+        public async Task EditProduct(Product product)
+        {
+            await _productRepository.EditProduct(product.ToProductDTO());
         }
 
         public async Task<IList<Product>> DeleteProduct(DeleteProductRequest request)
