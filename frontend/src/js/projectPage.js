@@ -236,23 +236,20 @@ function handleGenerateReportButton(event) {
 }
 
 function handleGenerateReportModal(event) {
-    resetReportModal(false);
-
+    const oldState = getState().currentProject;
     const setProjectToReadonlyAndRerender = (reportData) => {
         Modal.getInstance(document.querySelector('#genReportModal')).hide();
-        
-        // change project status in state and rerender
-        const oldState = getState().currentProject;
-        //updateState({
-        //    currentProject: { 
-        //        id: oldState.id,
-        //        name: oldState.name,
-        //        status: false 
-        //    }
-        //}, true);
+        updateState({ // change project status in state and rerender
+            currentProject: { 
+                id: oldState.id,
+                name: oldState.name,
+                status: false 
+            }
+        }, true);
     };
 
-    // Call API --> setProjectToReadonlyAndRerender();
+    resetReportModal(false);
+    fetchData('/Photovoltaic/GenerateElectricityReport', { ProjectId: oldState.id }, setProjectToReadonlyAndRerender);
 }
 
 function resetReportModal(isReset) {
