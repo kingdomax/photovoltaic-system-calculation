@@ -37,7 +37,7 @@ function renderHeader(project) {
     replaceEventListener(header.querySelector('#addProduct'), 'click', handleAddProductButton);
 
     // Attaching event listener to add product form
-    replaceEventListener(document.querySelector('#addProductForm'), 'submit', handleAddProductForm);
+    replaceEventListener(document.querySelector('#addEditProductForm'), 'submit', handleAddEditProductForm);
     document.querySelectorAll('input[name="pscProduct"]').forEach((radioButton) => {
         replaceEventListener(radioButton, 'change', handleRadioChange);
     });
@@ -77,6 +77,7 @@ function renderProductItemsAndMap(products) {
                         <p class="prod-item-id card-text">ID : ${product.id}</p>
                         <p class="prod-item-pp card-text">Pmax : ${product.powerpeak} kW</p>
                         <p class="prod-item-area card-text">Area : ${product.area} m²</p>
+                        <p class="prod-item-efficiency card-text">Efficiency : ${product.efficiency}</p>
                         <p class="prod-item-orientation card-text">Orientation : ${product.orientation}°</p>
                         <p class="prod-item-inclination card-text">Inclination : ${product.inclination}°</p>
                         <p class="prod-item-location card-text">Location : ${product.latitude}, ${product.longitude}</p>
@@ -107,10 +108,6 @@ function renderProductItemsAndMap(products) {
     renderMap(products);
 }
 
-function handleAddProductButton(event) {
-
-}
-
 function handleRadioChange(event) {
     event.preventDefault();
     let productConfig = pscProducts[event.target.id];
@@ -120,8 +117,54 @@ function handleRadioChange(event) {
     document.querySelector('.prod-efficiency').innerText = `Efficiency: ${productConfig.efficiency}`;
 }
 
-function handleAddProductForm(event) {
+function handleAddProductButton(event) {
+    document.querySelector('#createProductModal .title').textContent = 'Add Product'; // Change modal's header text to 'Add Product'
+    emptyAddEditForm(); // make sure all form fields are cleared
+}
+
+function handleEditButton(event) {
+    // 0) Grab all field data from '.product-item' so they can be putted to modal form
+    const productItem = event.target.closest('.product-item');
+    const productId = parseInt(productItem.dataset.id, 10);
+    const productName = productItem.querySelector('.prod-item-name').textContent;
+    const powerpeak = productItem.querySelector('.prod-item-pp').textContent.split(" : ")[1];
+    const area = productItem.querySelector('.prod-item-area').textContent.split(" : ")[1];
+    const efficiency = productItem.querySelector('.prod-item-efficiency').textContent.split(" : ")[1];
+    const orientation = productItem.querySelector('.prod-item-orientation').textContent.split(' ')[2].slice(0, -1); // without '°'
+    const inclination = productItem.querySelector('.prod-item-inclination').textContent.split(' ')[2].slice(0, -1); // without '°'
+    const [latitude, longitude] = productItem.querySelector('.prod-item-location').textContent.split(" : ")[1].split(", ");
+
+    // 1) Change modal's header text to 'Edit Product'
+    document.querySelector('#createProductModal .title').textContent = 'Edit Product';
+
+    // 2) Change content of modal based on grabbed data
+    document.querySelector('#orientation').value = orientation;
+    document.querySelector('#inclination').value = inclination;
+    document.querySelector('#lat-number').value = latitude;
+    document.querySelector('#lng-number').value = longitude;
+    document.querySelector('.prod-p-max').textContent = `Pmax: ${powerpeak}`;
+    document.querySelector('.prod-area').textContent = `Area: ${area}`;
+    document.querySelector('.prod-efficiency').textContent = `Efficiency: ${efficiency}`;
+
+    // 3) Select the radio button that has the label equal to 'productName'
+    document.querySelectorAll('#addEditProductForm .form-check').forEach(radio => {
+        const label = radio.querySelector('label').textContent.trim();
+        if (label === productName) {
+            radio.querySelector('input[type="radio"]').checked = true;
+        }
+    });
+
+    // 4) Show modal
+    let modal = Modal.getInstance(document.querySelector('#createProductModal'));
+    modal.show();
+
+    // 5) update state
+    updateState({ currentProduct: { id: productId } });
+}
+
+function handleAddEditProductForm(event) {
     event.preventDefault();
+    const isEditForm = getState().currentProduct.id != -1;
 
     // Get data from form and config
     let selectedProduct = document.querySelector('input[name="pscProduct"]:checked');
@@ -139,33 +182,26 @@ function handleAddProductForm(event) {
         Efficiency: productConfig.efficiency,
         ProjectId: getState().currentProject.id
     };
+    if (isEditForm) { newProduct.Id = getState().currentProduct.id; }
 
     // Dismiss the modal
     let modal = Modal.getInstance(document.querySelector('#createProductModal'));
     modal.hide();
 
     // Clear the form
+    emptyAddEditForm();
+
+    // Call API
+    const url = isEditForm ? '/Product/EditProduct' : '/Product/AddProduct';
+    fetchData(url, newProduct, renderProductItemsAndMap);
+}
+
+function emptyAddEditForm() {
     document.querySelector('#orientation').value = "";
     document.querySelector('#inclination').value = "";
     document.querySelector('#lat-number').value = "";
     document.querySelector('#lng-number').value = "";
-
-    // Call API
-    fetchData('/Product/AddProduct', newProduct, renderProductItemsAndMap);
-}
-
-function handleEditButton(event) {
-    const productItem = event.target.closest('.product-item');
-
-    const productId = parseInt(productItem.dataset.id, 10);
-    const productName = productItem.querySelector('.prod-item-name').textContent;
-    const productPmax = parseFloat(productItem.querySelector('.prod-item-pp').textContent.split(': ')[1].trim().replace(' kW', ''));
-    const productArea = parseFloat(productItem.querySelector('.prod-item-area').textContent.split(': ')[1].trim().replace(' m²', ''));
-    const productOrientation = parseFloat(productItem.querySelector('.prod-item-orientation').textContent.split(': ')[1].trim().replace('°', ''));
-    const productInclination = parseFloat(productItem.querySelector('.prod-item-inclination').textContent.split(': ')[1].trim().replace('°', ''));
-    const productLocation = productItem.querySelector('.prod-item-location').textContent.split(': ')[1].trim().split(',').map(coord => parseFloat(coord));
-
-    // change header of modal
+    updateState({ currentProduct: { id: -1 } });
 }
 
 function handleDeleteButton(event) {

@@ -16,7 +16,7 @@ window.state = {
     }
 };
 export function getState() { return JSON.parse(JSON.stringify(window.state)); }
-export function updateState(newState, enableReRender = true) { 
+export function updateState(newState, enableReRender = false) { 
     window.state = { ...window.state, ...newState };
     if (enableReRender) {
         sideEffect();

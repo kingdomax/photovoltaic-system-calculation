@@ -11,7 +11,7 @@ export function navbarChange(tabName) {
     const navLink = document.getElementById(tabName);
     const navLinks = document.querySelectorAll('.nav-pills .nav-link');
     highlightLink(navLink, navLinks);
-    updateState({ currentPage: tabName });
+    updateState({ currentPage: tabName }, true);
 }
 
 function highlightLink(navLink, navLinks) {
@@ -32,7 +32,7 @@ function initBodyPartUI() {
     navLinks.forEach((navLink) => {
         navLink.addEventListener('click', (e) => {
             highlightLink(e.currentTarget, navLinks);
-            updateState({ currentPage: e.currentTarget.id }); // re-render main section of landing page
+            updateState({ currentPage: e.currentTarget.id }, true); // re-render main section of landing page
         });
     });
 }

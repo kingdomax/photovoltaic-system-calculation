@@ -101,19 +101,19 @@ function handleEditViewButton(event) {
     const status = projectItem.dataset.active === 'true';
     const name = projectItem.querySelector('.project-name').textContent;
 
-    updateState({ currentProject: { id, name, status } }, false);
+    updateState({ currentProject: { id, name, status } });
     navbarChange('project');
 }
   
 function handleDeleteButton(event) {
     const projectItem = event.target.closest('.project-item');
     const projectId = parseInt(projectItem.dataset.id, 10);
-    updateState({ targetDeleteProject: projectId }, false);
+    updateState({ targetDeleteProject: projectId });
 }
 
 export function createProject() {
     const goToProjectPage = (project) => {
-        updateState({ currentProject: { id: project.id, name: project.name, status: project.status } }, false);
+        updateState({ currentProject: { id: project.id, name: project.name, status: project.status } });
         navbarChange('project');
     };
     fetchData('/Project/CreateProject', { Name: document.getElementById('createProjectName').value }, goToProjectPage);
