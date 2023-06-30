@@ -1,4 +1,5 @@
 ﻿using PhotovoltaicSystemCalculation.Models;
+using PhotovoltaicSystemCalculation.Repositories.Models;
 
 namespace PhotovoltaicSystemCalculation.Services.Interfaces
 {

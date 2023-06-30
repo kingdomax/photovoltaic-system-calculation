@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
+using System.Text.Json;
+using PhotovoltaicSystemCalculation.Services;
 
 namespace PhotovoltaicSystemCalculation.ExternalAPI
 {
@@ -33,7 +35,7 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
 
         private async Task<WeatherDTO> GetAverageWeatherForecastPerDay(float latitude, float longitude, long date)
         {
-            // Call OpenWeather API to get Clound and Tempurature data
+            // Call OpenWeather API to get Cloud and Tempurature data from Historical API
             var resultData = new List<WeatherDTO>();
 
             using (HttpClient client = new HttpClient())
@@ -69,7 +71,7 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                             // Create a WeatherDTO object
                             WeatherDTO weatherDTO = new WeatherDTO()
                             {
-                                DateTime = dateTime,
+                                Date = dateTime,
                                 Temperature = temperatureValueC,
                                 CloudCover = cloudsValue
                             };
@@ -90,15 +92,15 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             }
 
             // Calculating the average temperature
-            float averageTemperature = resultData.Average(r => r.Temperature);
+            double averageTemperature = resultData.Average(r => r.Temperature);
             // Calculating the average clouds value
-            float averageClouds = resultData.Average(r => r.CloudCover);
-            DateTime realDate = resultData[0].DateTime;
+            double averageClouds = resultData.Average(r => r.CloudCover);
+            DateTime realDate = resultData[0].Date;
 
             // Create a WeatherDTO object
             WeatherDTO avgWeatherDTO = new WeatherDTO()
             {
-                DateTime = realDate,
+                Date = realDate,
                 Temperature = averageTemperature,
                 CloudCover = averageClouds
             };
@@ -107,15 +109,53 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
 
         public async Task<WeatherDTO> GetDialyWeatherForCronjob(float latitude, float longitude)
         {
-            // TODO: call api to get Temperature & CloudCover
+            // Call OpenWeather API to get Cloud and Tempurature data from Daily API
+            var resultData = new List<WeatherDTO>();
+            double tempDayCelsius=0;
+            double cloudsClover =0;
+
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync("https://api.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=1&appid=cf5ead8af14c2db62245cc31d7fcf794");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        // Parse the response body into a JSON object
+                        JsonDocument doc = JsonDocument.Parse(responseBody);
+
+                        JsonElement root = doc.RootElement;
+                        JsonElement list = root.GetProperty("list");
+                        JsonElement firstItem = list[0];
+
+                        double tempDayK = firstItem.GetProperty("temp").GetProperty("day").GetDouble();
+                        // Convert temperature Kelvin to Celsius
+                        tempDayCelsius = tempDayK - 273.15;
+
+                        double clouds = firstItem.GetProperty("clouds").GetInt32();
+                        cloudsClover = clouds / 100;
+                    }
+                    else
+                    {
+                        Console.WriteLine("The API request was not successful. Status code: " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
 
             return new WeatherDTO()
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                DateTime = DateTime.Today,
-                Temperature = 1f,
-                CloudCover = 1f
+                Date = DateTime.Now,
+                Temperature = tempDayCelsius,
+                CloudCover = cloudsClover
             };
         }
     }
