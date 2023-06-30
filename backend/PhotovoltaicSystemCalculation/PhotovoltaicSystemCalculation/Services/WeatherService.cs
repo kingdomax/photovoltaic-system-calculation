@@ -1,4 +1,5 @@
-﻿using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Models;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
@@ -10,14 +11,13 @@ namespace PhotovoltaicSystemCalculation.Services
         private readonly IWeatherForecastAPI _weatherForecastApi;
         private readonly IWeatherRepository _weatherRepository;
         private readonly IProductRepository _productRepository;
-        
+
         public WeatherService(IWeatherForecastAPI weatherForecastApi, IProductRepository productRepository, IWeatherRepository weatherRepository) 
         {
             _productRepository = productRepository;
             _weatherForecastApi = weatherForecastApi;
             _weatherRepository = weatherRepository;
         }
-
 
         public async Task<bool> ScrapWeatherInfo()
         {
