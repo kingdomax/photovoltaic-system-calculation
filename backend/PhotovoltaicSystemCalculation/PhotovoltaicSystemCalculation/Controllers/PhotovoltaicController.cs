@@ -7,11 +7,13 @@ namespace PhotovoltaicSystemCalculation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PSCController : ControllerBase
+    public class PhotovoltaicController : ControllerBase
     {
+        private readonly IEPReportService _epReportService;
         private readonly IPhotovoltaicService _photovoltaicService;
-        public PSCController(IPhotovoltaicService photovoltaicService)
+        public PhotovoltaicController(IPhotovoltaicService photovoltaicService, IEPReportService epReportService)
         {
+            _epReportService = epReportService;
             _photovoltaicService = photovoltaicService;
         }
 
@@ -34,8 +36,15 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("GetElectricityReport")]
         public async Task<IActionResult> GetElectricityReport(GetElectricityReportRequest request)
         {
-            // return data in the format that lineChart() can use directly or if not can do it in clientside
-            return Ok();
+            try
+            {
+                var reportData = await _epReportService.GetElectricityReport(request.ProjectId);
+                return Ok(reportData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
     }
 }

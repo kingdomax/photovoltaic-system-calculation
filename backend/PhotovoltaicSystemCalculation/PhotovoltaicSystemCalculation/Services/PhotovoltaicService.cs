@@ -124,6 +124,7 @@ namespace PhotovoltaicSystemCalculation.Services
             bool isStoreReportDataInDB = false;
             try
             {
+                await _epReportService.DeleteReportByProjectId(projectId);
                 isStoreReportDataInDB = await _epReportService.StoreReportData(reportData);
             }
             catch (Exception ex) { throw new Exception($"An error occurred while calculate electricity for all product"); }
@@ -144,7 +145,7 @@ namespace PhotovoltaicSystemCalculation.Services
             }
             catch (Exception ex) { throw new Exception($"An error occurred while marking project as read-only"); }
 
-            Console.WriteLine($"[GenerateElectricityReport()] projectId: {projectId}, userId: {userId}isStoreReportDataInDB: {isStoreReportDataInDB}, isSendMailSuccess: {isSendMailSuccess}, isSetProjectToReadOnly: {isSetProjectToReadOnly}");
+            Console.WriteLine($"[GenerateElectricityReport()] projectId: {projectId}, userId: {userId}, isStoreReportDataInDB: {isStoreReportDataInDB}, isSendMailSuccess: {isSendMailSuccess}, isSetProjectToReadOnly: {isSetProjectToReadOnly}");
             return isStoreReportDataInDB && isSendMailSuccess && isSetProjectToReadOnly;
         }
 
@@ -157,11 +158,6 @@ namespace PhotovoltaicSystemCalculation.Services
             {
                 await GenerateElectricityReport(project.Id, project.OwnerId);
             }
-        }
-
-        public async Task<IList<ReportData>> GetElectricityReport(int projectId)
-        {
-            return null;    
         }
     }
 }
