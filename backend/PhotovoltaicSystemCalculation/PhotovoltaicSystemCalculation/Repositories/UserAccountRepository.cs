@@ -69,5 +69,10 @@ namespace PhotovoltaicSystemCalculation.Repositories
                 throw new Exception("Database error occurred when updating user", e);
             }
         }
+
+        public async Task<UserDTO> GetUser(int id)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+        }
     }
 }

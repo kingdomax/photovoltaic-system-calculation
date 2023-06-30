@@ -9,6 +9,11 @@ namespace PhotovoltaicSystemCalculation.Repositories
         private readonly SQLLiteContext _context;
         public ProjectRepository(SQLLiteContext context) => _context = context;
 
+        public async Task<ProjectDTO> GetProject(int userId)
+        {
+            return await _context.Projects.SingleOrDefaultAsync(p => p.Id == userId);
+        }
+
         public async Task<IList<ProjectDTO>> GetProjects(int userId)
         {
             try

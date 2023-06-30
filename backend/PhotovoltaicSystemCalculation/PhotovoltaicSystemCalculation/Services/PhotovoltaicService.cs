@@ -47,18 +47,18 @@ namespace PhotovoltaicSystemCalculation.Services
             //Mapping month with Solar Irridance
             foreach (var weather in weatherList)
             {
-                int month = weather.DateTime.Month;
+                int month = weather.Date.Month;
                 float sunIrridance = sunInfo.Irradiance[month];
 
                 //Calculate adjustedIrradiance [Adjusted Irradiance (kW/m²) = Solar Irradiance * Efficiency * (1 - Cloud Cover) * Area of solar cell]
-                float adjustedIrradiance = sunIrridance * args.Efficiency * (1f - weather.CloudCover) * args.Area;
+                double adjustedIrradiance = sunIrridance * args.Efficiency * (1 - weather.CloudCover) * args.Area;
 
                 //Calculate adjustedPeakPower [Adjusted Peak Power (kW) = Peak Power (kW) * (1 - Temp Coeff * (Temp - 25))]
-                float adjustedPeakPower = args.PeakPower * (1f - 0.005f * (weather.Temperature - 25f));
+                double adjustedPeakPower = args.PeakPower * (1 - 0.005 * (weather.Temperature - 25));
 
                 //Calculate Electricity Production per day
                 int sunlightHours = _sunlightHours[month];
-                float electricityProduction = adjustedIrradiance * adjustedPeakPower * sunlightHours;
+                double electricityProduction = adjustedIrradiance * adjustedPeakPower * sunlightHours;
 
                 // convert from kilowatts to watts and round the digit
                 double electricityProductionInWatts = Math.Round(electricityProduction * 1000, 2);
@@ -66,7 +66,7 @@ namespace PhotovoltaicSystemCalculation.Services
                 electricResults.Add(new ElectricProduction()
                 {
                     EP = electricityProductionInWatts,
-                    Date = weather.DateTime
+                    Date = weather.Date
                 });
             }
             return electricResults;

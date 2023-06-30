@@ -4,6 +4,6 @@ namespace PhotovoltaicSystemCalculation.Services.Interfaces
 {
     public interface IEmailService
     {
-        public Task<bool> SendReport(IList<ReportData> reportData, string recipientEmail);
+        public Task<bool> SendReport(IList<ReportData> reportData, int userId);
     }
 }

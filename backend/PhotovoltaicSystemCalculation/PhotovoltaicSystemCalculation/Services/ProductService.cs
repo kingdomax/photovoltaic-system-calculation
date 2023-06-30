@@ -25,7 +25,8 @@ namespace PhotovoltaicSystemCalculation.Services
                 Area = p.Area,
                 Inclination = p.Inclination,
                 Orientation = p.Orientation,
-                Powerpeak = p.Powerpeak
+                Powerpeak = p.Powerpeak,
+                ProjectId = p.ProjectId,
             }).ToList();
         }
 
