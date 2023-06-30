@@ -112,7 +112,6 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             var resultData = new List<WeatherDTO>();
             double tempDayCelsius=0;
             double cloudsClover =0;
-            DateTime dt = new DateTime();
 
             using (HttpClient client = new HttpClient())
             {
@@ -130,9 +129,6 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
                         JsonElement root = doc.RootElement;
                         JsonElement list = root.GetProperty("list");
                         JsonElement firstItem = list[0];
-
-                        long dtUnix = firstItem.GetProperty("dt").GetInt64();
-                        dt = DateTimeOffset.FromUnixTimeSeconds(dtUnix).DateTime.Date;
 
                         double tempDayK = firstItem.GetProperty("temp").GetProperty("day").GetDouble();
                         // Convert temperature Kelvin to Celsius
@@ -156,7 +152,7 @@ namespace PhotovoltaicSystemCalculation.ExternalAPI
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                Date = dt,
+                Date = DateTime.Now,
                 Temperature = tempDayCelsius,
                 CloudCover = cloudsClover
             };

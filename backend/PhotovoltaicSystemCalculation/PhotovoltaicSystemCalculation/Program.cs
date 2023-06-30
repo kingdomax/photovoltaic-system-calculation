@@ -4,6 +4,8 @@ using PhotovoltaicSystemCalculation.Repositories;
 using PhotovoltaicSystemCalculation.Services.Interfaces;
 using PhotovoltaicSystemCalculation.ExternalAPI.Interfaces;
 using PhotovoltaicSystemCalculation.Repositories.Interfaces;
+using Hangfire;
+using Hangfire.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +42,21 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CronJob Hangfire's use of SQL Server storage.
+builder.Services.AddHangfire(x => x.UseSQLiteStorage("Data Source=psc.db;")) ;
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
+
+// Use Hangfire Dashboard
+app.UseHangfireDashboard();
+
+// Configure Hangfire job
+using (var scope = app.Services.CreateScope())
+{
+    var weatherService = scope.ServiceProvider.GetRequiredService<IWeatherService>();
+    RecurringJob.AddOrUpdate(() => weatherService.ScrapWeatherInfo(), "15 0 * * *");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
