@@ -23,5 +23,13 @@ namespace PhotovoltaicSystemCalculation.Helpers
             Console.WriteLine("Invalid date time string");
             return 0;
         }
+
+        public static long GetCurrentUnixTimestampMinusThreeHours()
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var unixTimestamp = (long)(DateTime.UtcNow.AddHours(-3) - epoch).TotalSeconds;
+
+            return unixTimestamp;
+        }
     }
 }

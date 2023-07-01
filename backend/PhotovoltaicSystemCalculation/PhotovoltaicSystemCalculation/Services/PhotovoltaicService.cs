@@ -107,7 +107,7 @@ namespace PhotovoltaicSystemCalculation.Services
             catch (Exception ex) { throw new Exception($"An error occurred while retreiving all product and project information from database"); }
 
             // 1. Calculate electricity for all products inside this project
-            var startDate = DateTimeHelper.ConvertToUnix(project.CreatedAt);
+            var startDate = DateTimeHelper.GetCurrentUnixTimestampMinusThreeHours();
             var reportData = new List<ReportData>();
             try
             {

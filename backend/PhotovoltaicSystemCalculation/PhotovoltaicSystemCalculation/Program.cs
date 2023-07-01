@@ -61,7 +61,7 @@ using (var scope = app.Services.CreateScope())
     RecurringJob.AddOrUpdate(() => weatherService.ScrapWeatherInfo(), "0 22 * * *");
 
     var pscService = scope.ServiceProvider.GetRequiredService<IPhotovoltaicService>();
-    RecurringJob.AddOrUpdate(() => pscService.AutomaticGenerateElectricityReport(), "6 21 * * *");
+    RecurringJob.AddOrUpdate(() => pscService.AutomaticGenerateElectricityReport(), "0 22 * * *");
 }
 
 // Configure the HTTP request pipeline.
