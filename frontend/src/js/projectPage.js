@@ -119,7 +119,7 @@ function handleRadioChange(event) {
     document.querySelector('.prod-efficiency').innerText = `Efficiency: ${productConfig.efficiency}`;
 }
 
-function handleAddProductButton(event) {
+export function handleAddProductButton(event) {
     document.querySelector('#createProductModal .title').textContent = 'Add Product'; // Change modal's header text to 'Add Product'
     emptyAddEditForm(); // make sure all form fields are cleared
 }

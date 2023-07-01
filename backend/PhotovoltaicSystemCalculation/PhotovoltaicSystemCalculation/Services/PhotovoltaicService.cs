@@ -93,21 +93,25 @@ namespace PhotovoltaicSystemCalculation.Services
 
         public async Task<bool> GenerateElectricityReport(int projectId, int userId)
         {
+            Console.WriteLine($"[GenerateElectricityReport()] projectId: {projectId}, userId: {userId}");
+
             // 0. Prepare all product and project information
             var project = new ProjectDTO();
             IList<Product> allProduct = new List<Product>();
             try
             {
+                Console.WriteLine($"[GenerateElectricityReport()] Retreiving all product and project information from database..");
                 project = await _projectRepository.GetProject(projectId);
                 allProduct = await _productService.GetProducts(projectId);
             }
-            catch (Exception ex) { throw new Exception($"An error occurred while retreiving project and product from database"); }
+            catch (Exception ex) { throw new Exception($"An error occurred while retreiving all product and project information from database"); }
 
             // 1. Calculate electricity for all products inside this project
             var startDate = DateTimeHelper.ConvertToUnix(project.CreatedAt);
             var reportData = new List<ReportData>();
             try
             {
+                Console.WriteLine($"[GenerateElectricityReport()] Calculate electricity for all product..");
                 foreach (var product in allProduct) 
                 {
                     var electricProduction = await CalculateElectricProductionPerProduct(product, startDate);
@@ -124,15 +128,17 @@ namespace PhotovoltaicSystemCalculation.Services
             bool isStoreReportDataInDB = false;
             try
             {
+                Console.WriteLine($"[GenerateElectricityReport()] Store electricity report to database...");
                 await _epReportService.DeleteReportByProjectId(projectId);
                 isStoreReportDataInDB = await _epReportService.StoreReportData(reportData);
             }
-            catch (Exception ex) { throw new Exception($"An error occurred while calculate electricity for all product"); }
+            catch (Exception ex) { throw new Exception($"An error occurred while store electricity report to database"); }
 
             // 3. Send mail
             bool isSendMailSuccess = false;
             try
             {
+                Console.WriteLine($"[GenerateElectricityReport()] Sending report data to user email...");
                 isSendMailSuccess = await _emailService.SendReport(reportData, userId, project.Name);
             }
             catch (Exception ex) { throw new Exception($"An error occurred while sending report data to user email"); }
@@ -141,11 +147,12 @@ namespace PhotovoltaicSystemCalculation.Services
             bool isSetProjectToReadOnly = false;
             try
             {
+                Console.WriteLine($"[GenerateElectricityReport()] Marking project as read-only...");
                 isSetProjectToReadOnly = await _projectService.MarkProjectAsReadOnly(projectId);
             }
             catch (Exception ex) { throw new Exception($"An error occurred while marking project as read-only"); }
 
-            Console.WriteLine($"[GenerateElectricityReport()] projectId: {projectId}, userId: {userId}, isStoreReportDataInDB: {isStoreReportDataInDB}, isSendMailSuccess: {isSendMailSuccess}, isSetProjectToReadOnly: {isSetProjectToReadOnly}");
+            Console.WriteLine($"[GenerateElectricityReport()] isStoreReportDataInDB: {isStoreReportDataInDB}, isSendMailSuccess: {isSendMailSuccess}, isSetProjectToReadOnly: {isSetProjectToReadOnly}");
             return isStoreReportDataInDB && isSendMailSuccess && isSetProjectToReadOnly;
         }
 

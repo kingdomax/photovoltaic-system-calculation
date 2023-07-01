@@ -1,5 +1,6 @@
 import L from 'leaflet'; // Import leaflet into your JS file
 import 'leaflet/dist/leaflet.css'; // This import is important to include leaflet's CSS
+import { getState } from "./landingPage";
 
 let map = null;
 let markers = [];
@@ -12,8 +13,6 @@ export function render(products) {
   clearMarkers();
   setViewBasedOnProducts(products);
   renderProductMarkers(products);
-
-  // TODO: prevent add, edit, delete button
 }
 
 function initializeMap() {
@@ -58,15 +57,17 @@ function renderProductMarkers(products) {
     locationParagraph.textContent = `Location: ${product.latitude}, ${product.longitude}`;
     content.appendChild(locationParagraph);
 
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.addEventListener('click', () => editProduct(product.id));
-    content.appendChild(editButton);
+    if (getState().currentProject.status) { // marker's add/edit button willl not display on read-only project
+      const editButton = document.createElement('button');
+      editButton.textContent = 'Edit';
+      editButton.addEventListener('click', () => editProduct(product.id));
+      content.appendChild(editButton);
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => deleteProduct(product.id));
-    content.appendChild(deleteButton);
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => deleteProduct(product.id));
+      content.appendChild(deleteButton);
+    }
 
     marker.bindPopup(content);
     markers.push(marker);
@@ -84,10 +85,12 @@ function onMapClick(e) {
   locationParagraph.textContent = `Location: ${lat}, ${lng}`;
   content.appendChild(locationParagraph);
 
-  const addButton = document.createElement('button');
-  addButton.textContent = 'Add product';
-  addButton.addEventListener('click', () => addProduct(lat, lng));
-  content.appendChild(addButton);
+  if (getState().currentProject.status) {
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add product';
+    addButton.addEventListener('click', () => addProduct(lat, lng));
+    content.appendChild(addButton);
+  }
 
   L.popup().setLatLng(latLng).setContent(content).openOn(map);
 }
