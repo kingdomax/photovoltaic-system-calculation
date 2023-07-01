@@ -1,6 +1,7 @@
 import { Modal } from 'bootstrap';
 import { fetchData } from "./fetchModule";
 import * as chartModule from './chartModule';
+import * as mapModule from './mapModule';
 import { pscProducts } from "./configs/pscProduct";
 import { getState, updateState } from "./landingPage";
 import { replaceEventListener } from "./helpers/domHelpers";
@@ -220,9 +221,7 @@ function handleConfirmDeleteModal(event) {
 }
 
 function renderMap(products) {
-    console.log('re-render pins on map');
-
-    // mapModule.render();
+    mapModule.render(products);
 }
 
 function handleGenerateReportButton(event) {
