@@ -1,9 +1,12 @@
 import * as d3 from 'd3';
 
 export function drawLineChart(reportData) {
+    let svg = d3.select("svg#electricReport");
+    svg.selectAll("*").remove(); // Clear the SVG
     const flatData = flatternData(reportData);
+
     lineChart({
-        svg: d3.select("svg#electricReport"),
+        svg: svg,
         data: flatData,
         attribute: "ep",
     });
@@ -25,6 +28,7 @@ function lineChart({
         d.date = new Date(d.date);
     });
 
+    // Set viewbox attribute
     svg.attr('viewBox', [0, 0, width, height]).style('font', '10px sans-serif');
 
     // scale for the number of days on the x-axis
