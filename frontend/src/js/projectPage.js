@@ -36,6 +36,11 @@ function renderHeader(project) {
     // Set project name
     header.querySelector('.fw-light').textContent = `${project.name}${!project.status ? " (read-only)" : ""}`;
 
+    // Attaching event listener to add product modal
+    document.getElementById('createProductModal').addEventListener('hidden.bs.modal', function (event) {
+        emptyAddEditForm();
+    });
+
     // Attaching event listener to add product button
     header.querySelector('#addProduct').style.display = project.status ? 'inline-block' : 'none';
     replaceEventListener(header.querySelector('#addProduct'), 'click', handleAddProductButton);
@@ -121,7 +126,14 @@ function handleRadioChange(event) {
 
 export function handleAddProductButton(event) {
     document.querySelector('#createProductModal .title').textContent = 'Add Product'; // Change modal's header text to 'Add Product'
-    emptyAddEditForm(); // make sure all form fields are cleared
+
+    // Fill latlng only it clicked from map
+    const lat = getState().map.currentLat;
+    const lng = getState().map.currentLng;
+    if (lat != -1 && lng != -1) {
+        document.querySelector('#lat-number').value = lat;
+        document.querySelector('#lng-number').value = lng;
+    }
 }
 
 function handleEditButton(event) {
@@ -190,9 +202,6 @@ function handleAddEditProductForm(event) {
     let modal = Modal.getInstance(document.querySelector('#createProductModal'));
     modal.hide();
 
-    // Clear the form
-    emptyAddEditForm();
-
     // Call API
     const url = isEditForm ? '/Product/EditProduct' : '/Product/AddProduct';
     fetchData(url, newProduct, renderProductItemsAndMap);
@@ -203,7 +212,10 @@ function emptyAddEditForm() {
     document.querySelector('#inclination').value = "";
     document.querySelector('#lat-number').value = "";
     document.querySelector('#lng-number').value = "";
-    updateState({ currentProduct: { id: -1 } });
+    updateState({ 
+        currentProduct: { id: -1 },
+        map: { currentLat: -1, currentLng: -1, }
+    });
 }
 
 function handleDeleteButton(event) {

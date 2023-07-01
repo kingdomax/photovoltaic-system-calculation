@@ -1,6 +1,6 @@
 import L from 'leaflet'; // Import leaflet into your JS file
 import 'leaflet/dist/leaflet.css'; // This import is important to include leaflet's CSS
-import { getState } from "./landingPage";
+import { getState, updateState } from "./landingPage";
 
 let map = null;
 let markers = [];
@@ -96,16 +96,19 @@ function onMapClick(e) {
 }
 
 function addProduct(lat, lng) {
-  // Implement your product add logic here
-  console.log(`Add product at: ${lat}, ${lng}`);
+  // set current location to lat&lng state
+  updateState({
+    map: { currentLat: lat, currentLng: lng, }
+  });
+  document.querySelector('#addProduct').click();
 }
 
 function editProduct(id) {
-  // Implement your product edit logic here
   console.log(`Edit product: ${id}`);
+  document.querySelector(`.product-item[data-id="${id}"] .edit-product`).click();
 }
 
 function deleteProduct(id) {
-  // Implement your product delete logic here
   console.log(`Delete product: ${id}`);
+  document.querySelector(`.product-item[data-id="${id}"] .delete-product`).click();
 }

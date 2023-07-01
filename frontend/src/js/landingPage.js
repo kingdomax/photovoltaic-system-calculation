@@ -13,6 +13,10 @@ window.state = {
     targetDeleteProject: -1,
     currentProduct: { // same as Product.cs
         id: -1,
+    },
+    map: {
+        currentLat: -1,
+        currentLng: -1,
     }
 };
 export function getState() { return JSON.parse(JSON.stringify(window.state)); }
