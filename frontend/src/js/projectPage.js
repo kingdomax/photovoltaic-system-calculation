@@ -64,7 +64,16 @@ function renderHeader(project) {
 }
 
 function renderProductItemsAndMap(products) {
+    // Display whole container (product list + map)
     document.querySelector('.project-page > .album').style.display = 'flex';
+    
+    // Check the length of products and add 'disabled' class if necessary
+    let genReportModalButton = document.getElementById('generateReport');
+    if (products.length <= 0) {
+        genReportModalButton.classList.add('disabled');
+    } else {
+        genReportModalButton.classList.remove('disabled');
+    }
     
     // Clear the container before appending new product items
     const container = document.querySelector('.product-container > .row');
