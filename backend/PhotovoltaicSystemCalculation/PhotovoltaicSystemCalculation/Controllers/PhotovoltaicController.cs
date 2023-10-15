@@ -20,11 +20,15 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("GenerateElectricityReport")]
         [UserExtractionFilter]
         public async Task<IActionResult> GenerateElectricityReport(GenerateReportRequest request)
-        {            
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid generate report request");
+            }
+
             try
             {
                 var result = await _photovoltaicService.GenerateElectricityReport(request.ProjectId, (int)HttpContext.Items["UserId"]);
-                //var result = await _photovoltaicService.GenerateElectricityReport(request.ProjectId, 1);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -36,6 +40,11 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("GetElectricityReport")]
         public async Task<IActionResult> GetElectricityReport(GetElectricityReportRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest("Invalid generate report request");
+            }
+
             try
             {
                 var reportData = await _epReportService.GetElectricityReport(request.ProjectId);
