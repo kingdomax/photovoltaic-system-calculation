@@ -42,6 +42,12 @@ For testing, you can use the following account details:
 - Username: admin
 - Password: 1234
 
+## Run Tests
+
+To run xUnit:
+1. Navigate to test directory with `cd backend/PhotovoltaicSystemCalculation/UnitTest`
+2. Run the backend with `dotnet test`
+
 ## Application Dependencies
 
 The application relies on the following libraries and APIs:
