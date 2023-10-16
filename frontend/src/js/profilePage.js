@@ -53,5 +53,5 @@ function bindEvents() {
 }
 
 function editUserInfo(requestBody, onSuccess) {
-    fetchData('/Auth/EditProfile', requestBody, onSuccess || ((response) => {}));
+    fetchData('/Auth/EditAndRetreiveProfile', requestBody, onSuccess || ((response) => {}));
 }
