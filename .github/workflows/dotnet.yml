@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore ./photovoltaic-system-calculation/backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln
+      run: dotnet restore ./backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln
     - name: Build
-      run: dotnet build ./photovoltaic-system-calculation/backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln --no-restore
+      run: dotnet build ./backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln --no-restore
     - name: Test
-      run: dotnet test ./photovoltaic-system-calculation/backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln --no-build --verbosity normal
+      run: dotnet test ./backend/PhotovoltaicSystemCalculation/PhotovoltaicSystemCalculation.sln --no-build --verbosity normal
