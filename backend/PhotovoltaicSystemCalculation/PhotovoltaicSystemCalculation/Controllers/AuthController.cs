@@ -22,7 +22,7 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLoginRequest login)
         {
-            if (login == null || string.IsNullOrEmpty(login.Username) || string.IsNullOrEmpty(login.Password))
+            if (string.IsNullOrEmpty(login?.Username) || string.IsNullOrEmpty(login?.Password))
             {
                 return BadRequest("Invalid login request");
             }
@@ -34,7 +34,7 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [HttpPost("Signup")]
         public async Task<IActionResult> Signup(UserLoginRequest login)
         {
-            if (login == null || string.IsNullOrEmpty(login.Username) || string.IsNullOrEmpty(login.Password))
+            if (string.IsNullOrEmpty(login?.Username) || string.IsNullOrEmpty(login?.Password))
             {
                 return BadRequest("Invalid signup request");
             }

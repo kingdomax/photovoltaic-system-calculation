@@ -35,6 +35,11 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [UserExtractionFilter]
         public async Task<IActionResult> CreateProject(CreateProjectRequest request)
         {
+            if (string.IsNullOrEmpty(request?.Name))
+            {
+                return BadRequest("Invalid create project request");
+            }
+            
             try
             {
                 var newProject = await _projectService.CreateProject((int)HttpContext.Items["UserId"], request);
@@ -50,6 +55,11 @@ namespace PhotovoltaicSystemCalculation.Controllers
         [UserExtractionFilter]
         public async Task<IActionResult> DeleteProject(DeleteProjectRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest("Invalid delete project request");
+            }
+
             try
             {
                 var projects = await _projectService.DeleteProject((int)HttpContext.Items["UserId"], request);
