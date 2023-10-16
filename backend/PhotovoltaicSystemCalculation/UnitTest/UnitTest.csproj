@@ -26,4 +26,9 @@
     <ProjectReference Include="..\PhotovoltaicSystemCalculation\PhotovoltaicSystemCalculation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
