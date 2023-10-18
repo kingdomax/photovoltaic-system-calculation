@@ -1,9 +1,12 @@
 ﻿using System.Globalization;
+using PhotovoltaicSystemCalculation.Helpers.Interfaces;
 
 namespace PhotovoltaicSystemCalculation.Helpers
 {
     public static class DateTimeHelper
     {
+        public static ITimeProvider TimeProvider { get; set; } = new RealTimeProvider();
+
         public static long ConvertToUnix(string iso8601String)
         {
             DateTime dateTime;
@@ -27,7 +30,7 @@ namespace PhotovoltaicSystemCalculation.Helpers
         public static long GetCurrentUnixTimestampMinusThreeHours()
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var unixTimestamp = (long)(DateTime.UtcNow.AddHours(-3) - epoch).TotalSeconds;
+            var unixTimestamp = (long)(TimeProvider.UtcNow.AddHours(-3) - epoch).TotalSeconds;
 
             return unixTimestamp;
         }
