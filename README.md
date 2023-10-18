@@ -46,7 +46,7 @@ For testing, you can use the following account details:
 
 To run xUnit:
 1. Navigate to test directory with `cd backend/PhotovoltaicSystemCalculation/UnitTest`
-2. Run the backend with `dotnet test`
+2. Start test suits with `dotnet test`
 
 ## Application Dependencies
 
