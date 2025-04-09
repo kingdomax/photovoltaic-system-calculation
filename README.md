@@ -1,5 +1,21 @@
 # Photovoltaic System Calculator
+[![Watch the video](https://github.com/user-attachments/assets/b93cb1e0-1ec1-4005-9651-606879d6f61f)](https://www.youtube.com/watch?v=tKLgZwmIMao)
+
 In today's digital era, planning efficiently using digital tools provides an invaluable advantage. This is particularly true for business and private electricity planning such as the utilization of photovoltaic systems (PV/PS). This project aims to address the challenges associated with calculating and determining the effectiveness and feasibility of photovoltaic systems. We have developed a prototype web-based calculation system for a photovoltaic system, specifically tailored to a particular manufacturer and product. The application considers the current weather data and local conditions at the specific location on the planet, assisting in accurately calculating and specifying the photovoltaic system's potential. The website comprises four essential components: Frontend, External Webservice API, Backend, and Database.
+
+Demo: https://www.youtube.com/watch?v=tKLgZwmIMao
+
+## Key Features
+
+- User Accounts: Users can register, log in, update profiles, and delete their accounts.
+- Project Management: Create, filter, edit, and delete solar energy projects with status indicators.
+- Product Configuration: Add and customize solar products within projects, including location and physical parameters.
+- Interactive Map: Visualize and manage product placements using an interactive map interface.
+- API Integration: Fetch real-time solar irradiance (PVGIS) and weather data (OpenWeatherMap) to enhance calculation accuracy.
+- Energy Production Estimation: Calculates daily energy output based on product and weather data using physical formulas.
+- Report Generation: Generate and email detailed Excel reports; projects are marked as inactive after report creation.
+- Automated Background Jobs: Cronjobs collect daily weather data and auto-generate reports for 30-day projects.
+- Data Storage: SQLite database holds data on users, projects, products, weather records, and production reports.
 
 ## Getting Started
 
