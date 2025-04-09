@@ -78,4 +78,6 @@ The application relies on the following libraries and APIs:
 - [HangFire lib](https://www.hangfire.io/)
 - [Swashbuckle lib](https://github.com/domaindrivendev/Swashbuckle)
 - [Microsoft SQLite lib](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/)
+- [GitHub Actions](https://github.com/features/actions)
+- [xUnit](https://xunit.net)
 
