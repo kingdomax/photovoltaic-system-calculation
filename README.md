@@ -1,4 +1,5 @@
 # Photovoltaic System Calculator
+
 [![Watch the video](https://github.com/user-attachments/assets/b93cb1e0-1ec1-4005-9651-606879d6f61f)](https://www.youtube.com/watch?v=tKLgZwmIMao)
 
 In today's digital era, planning efficiently using digital tools provides an invaluable advantage. This is particularly true for business and private electricity planning such as the utilization of photovoltaic systems (PV/PS). This project aims to address the challenges associated with calculating and determining the effectiveness and feasibility of photovoltaic systems. We have developed a prototype web-based calculation system for a photovoltaic system, specifically tailored to a particular manufacturer and product. The application considers the current weather data and local conditions at the specific location on the planet, assisting in accurately calculating and specifying the photovoltaic system's potential. The website comprises four essential components: Frontend, External Webservice API, Backend, and Database.
@@ -16,6 +17,23 @@ Demo: https://www.youtube.com/watch?v=tKLgZwmIMao
 - Report Generation: Generate and email detailed Excel reports; projects are marked as inactive after report creation.
 - Automated Background Jobs: Cronjobs collect daily weather data and auto-generate reports for 30-day projects.
 - Data Storage: SQLite database holds data on users, projects, products, weather records, and production reports.
+
+## Application Dependencies
+
+The application relies on the following tools, frameworks, libraries and APIs:
+
+- [Vite.js](https://vitejs.dev/)
+- [Bootstrap](https://getbootstrap.com/)
+- [D3.js](https://d3js.org/)
+- [Leaflet.js](https://leafletjs.com/)
+- [PVGIS API](https://ec.europa.eu/jrc/en/pvgis)
+- [OpenWeatherMap API](https://openweathermap.org/api)
+- [EPPlus lib](https://github.com/EPPlusSoftware/EPPlus)
+- [HangFire lib](https://www.hangfire.io/)
+- [Swashbuckle lib](https://github.com/domaindrivendev/Swashbuckle)
+- [Microsoft SQLite lib](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/)
+- [GitHub Actions](https://github.com/features/actions)
+- [xUnit](https://xunit.net)
 
 ## Getting Started
 
@@ -63,21 +81,4 @@ For testing, you can use the following account details:
 To run xUnit:
 1. Navigate to test directory with `cd backend/PhotovoltaicSystemCalculation/UnitTest`
 2. Start test suits with `dotnet test`
-
-## Application Dependencies
-
-The application relies on the following libraries and APIs:
-
-- [Vite.js](https://vitejs.dev/)
-- [Bootstrap](https://getbootstrap.com/)
-- [D3.js](https://d3js.org/)
-- [Leaflet.js](https://leafletjs.com/)
-- [PVGIS API](https://ec.europa.eu/jrc/en/pvgis)
-- [OpenWeatherMap API](https://openweathermap.org/api)
-- [EPPlus lib](https://github.com/EPPlusSoftware/EPPlus)
-- [HangFire lib](https://www.hangfire.io/)
-- [Swashbuckle lib](https://github.com/domaindrivendev/Swashbuckle)
-- [Microsoft SQLite lib](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/)
-- [GitHub Actions](https://github.com/features/actions)
-- [xUnit](https://xunit.net)
 
