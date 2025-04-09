@@ -8,15 +8,15 @@ Demo: https://www.youtube.com/watch?v=tKLgZwmIMao
 
 ## Key Features
 
-- User Accounts: Users can register, log in, update profiles, and delete their accounts.
-- Project Management: Create, filter, edit, and delete solar energy projects with status indicators.
-- Product Configuration: Add and customize solar products within projects, including location and physical parameters.
-- Interactive Map: Visualize and manage product placements using an interactive map interface.
-- API Integration: Fetch real-time solar irradiance (PVGIS) and weather data (OpenWeatherMap) to enhance calculation accuracy.
-- Energy Production Estimation: Calculates daily energy output based on product and weather data using physical formulas.
-- Report Generation: Generate and email detailed Excel reports; projects are marked as inactive after report creation.
-- Automated Background Jobs: Cronjobs collect daily weather data and auto-generate reports for 30-day projects.
-- Data Storage: SQLite database holds data on users, projects, products, weather records, and production reports.
+- **User Accounts:** Users can register, log in, update profiles, and delete their accounts.
+- **Project Management:** Create, filter, edit, and delete solar energy projects with status indicators.
+- **Product Configuration:** Add and customize solar products within projects, including location and physical parameters.
+- **Interactive Map:** Visualize and manage product placements using an interactive map interface.
+- **API Integration:** Fetch real-time solar irradiance (PVGIS) and weather data (OpenWeatherMap) to enhance calculation accuracy.
+- **Energy Production Estimation:** Calculates daily energy output based on product and weather data using physical formulas.
+- **Report Generation:** Generate and email detailed Excel reports; projects are marked as inactive after report creation.
+- **Automated Background Jobs:** Cronjobs collect daily weather data and auto-generate reports for 30-day projects.
+- **Data Storage:** SQLite database holds data on users, projects, products, weather records, and production reports.
 
 ## Application Dependencies
 
