@@ -18,7 +18,7 @@ Demo: https://www.youtube.com/watch?v=tKLgZwmIMao
 - **Automated Background Jobs:** Cronjobs collect daily weather data and auto-generate reports for 30-day projects.
 - **Data Storage:** SQLite database holds data on users, projects, products, weather records, and production reports.
 
-## Application Dependencies
+## Tech Stacks
 
 The application relies on the following tools, frameworks, libraries and APIs:
 
@@ -26,14 +26,15 @@ The application relies on the following tools, frameworks, libraries and APIs:
 - [Bootstrap](https://getbootstrap.com/)
 - [D3.js](https://d3js.org/)
 - [Leaflet.js](https://leafletjs.com/)
+- [ASP .NET](https://dotnet.microsoft.com/en-us/apps/aspnet)
+- [SQLite](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/)
+- [xUnit](https://xunit.net)
+- [GitHub Actions](https://github.com/features/actions)
 - [PVGIS API](https://ec.europa.eu/jrc/en/pvgis)
 - [OpenWeatherMap API](https://openweathermap.org/api)
 - [EPPlus lib](https://github.com/EPPlusSoftware/EPPlus)
 - [HangFire lib](https://www.hangfire.io/)
 - [Swashbuckle lib](https://github.com/domaindrivendev/Swashbuckle)
-- [Microsoft SQLite lib](https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/)
-- [GitHub Actions](https://github.com/features/actions)
-- [xUnit](https://xunit.net)
 
 ## Getting Started
 
