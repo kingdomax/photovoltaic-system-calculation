@@ -1,6 +1,6 @@
 # Photovoltaic System Calculator
 
-[![Watch the video](https://github.com/user-attachments/assets/b93cb1e0-1ec1-4005-9651-606879d6f61f)](https://www.youtube.com/watch?v=tKLgZwmIMao)
+[![Watch the video](https://github.com/user-attachments/assets/57bc6087-d7f2-4db2-a89f-26b08d47bcc2)](https://www.youtube.com/watch?v=tKLgZwmIMao)
 
 In today's digital era, planning efficiently using digital tools provides an invaluable advantage. This is particularly true for business and private electricity planning such as the utilization of photovoltaic systems (PV/PS). This project aims to address the challenges associated with calculating and determining the effectiveness and feasibility of photovoltaic systems. We have developed a prototype web-based calculation system for a photovoltaic system, specifically tailored to a particular manufacturer and product. The application considers the current weather data and local conditions at the specific location on the planet, assisting in accurately calculating and specifying the photovoltaic system's potential. The website comprises four essential components: Frontend, External Webservice API, Backend, and Database.
 
